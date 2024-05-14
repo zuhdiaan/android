@@ -5,6 +5,11 @@ import Menu from './Menu'
 
 export default function Homepage() {
   const navigation = useNavigation()
+
+  const goToNextScreen = () => {
+    navigation.navigate(Menu)
+  }
+
   return (
     <View className="bg-black">
       <Image source={require("./../../assets/images/homepage.jpg")}
@@ -20,8 +25,4 @@ export default function Homepage() {
       </View>
     </View>
   )
-}
-
-const goToNextScreen = () => {
-  navigation.navigate(Menu)
 }
