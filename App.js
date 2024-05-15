@@ -14,7 +14,7 @@ export default function App() {
       <StatusBar style="auto" />
       <Stack.Navigator initialRouteName="Homepage">
         <Stack.Screen name="Homepage" component={Homepage} options={{ headerShown: false }} />
-        <Stack.Screen name="Menu" component={Menu} />
+        <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

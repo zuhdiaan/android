@@ -16,11 +16,11 @@ export default function Homepage() {
         className="w-full h-[600px] object-cover"
       />
       <View className="p-10 bg-white mt-[-15px] rounded-t-3xl">
-        <Text className="text-[30px] font-bold">Jiwani</Text>
-        <Text className="text-[18px] text-slate-500 mt-2">Everyone Has Their Own Space</Text>
-        <TouchableOpacity onPress={() => {goToNextScreen()}}
-        className="p-3 bg-blue-500 rounded-full mt-20">
-            <Text className="text-white text-center text-[18px]">Get Started</Text>
+        <Text className="text-[20px] font-bold">Welcome To Jiwani Coffee</Text>
+        <Text className="text-[18px] text-slate-500 mt-2">What would you like to have today?</Text>
+        <TouchableOpacity style={{ backgroundColor: '#19301B' }} onPress={() => {goToNextScreen()}}
+        className="p-3 rounded-full mt-20">
+            <Text className="text-white text-center text-[18px]">Start Ordering</Text>
         </TouchableOpacity>
       </View>
     </View>
