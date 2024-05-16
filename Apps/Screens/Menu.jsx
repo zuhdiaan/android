@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, FlatList, ScrollView } from 'react-native';
 import { debounce } from 'lodash';
 import Magnifier from "./../../assets/images/magnifier.png";
 
+export default function Menu () {
 const SearchBar = () => {
   const [searchText, setSearchText] = useState('');
 
@@ -26,11 +27,11 @@ const SearchBar = () => {
   );
 };
 
-const CategoryItem = ({ name }) => {
+const CategoryItem = ({ name, onPress }) => {
   return (
-    <View style={styles.categoryItem}>
+    <TouchableOpacity style={styles.categoryItem} onPress={() => onPress(name)}>
       <Text style={styles.categoryText}>{name}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -48,54 +49,67 @@ const MenuItem = ({ name, price, onAdd }) => {
 
 const PaymentButton = () => {
   return (
+    <View style={styles.paymentContainer}>
     <TouchableOpacity style={styles.paymentButton}>
       <Text style={styles.buttonText}>Choose Payment Method</Text>
     </TouchableOpacity>
+    </View>
   );
 };
 
-const categories = [
+const CategoryList = () => {
+  const categories = [
   { name: 'All' },
   { name: 'Coffee' },
   { name: 'Non Coffee' },
   { name: 'Eat-ables' },
 ];
 
+const handleCategoryPress = (category) => {
+    console.log(`${category} pressed`);
+  };
+
 const menuItems = [
   { name: 'Space To Create', price: 'Rp. 25,000' },
   { name: 'Americano', price: 'Rp. 20,000' },
   { name: 'Chicken Chop', price: 'Rp. 53,000' },
+  { name: 'Jiwani Aren', price: 'Rp. 24.000'},
+  { name: 'Ayam Sambal Matah', price: 'Rp. 46.000'},
+  { name: 'Kopi Susu Jiwani', price: 'Rp. 23.000'},
+
 ];
 
-export default function Menu() {
   return (
     <View style={styles.container}>
       <SearchBar />
-      <FlatList
-        data={categories}
-        renderItem={({ item }) => (
-          <CategoryItem name={item.name} />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      />
-      <View style={styles.menuContainer}>
-        <FlatList
-          data={menuItems}
-          renderItem={({ item }) => (
-            <MenuItem name={item.name} price={item.price} onAdd={() => console.log('Add item')} />
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </View>
+      <ScrollView style={styles.menuContainer}>
+        <View style={styles.CategoryList}>
+      {categories.map((item, index) => (
+        <CategoryItem key={index.toString()} name={item.name} onPress={handleCategoryPress} />
+        ))}
+        </View>
+      {menuItems.map((item, index) => (
+            <MenuItem
+              key={index.toString()}
+              name={item.name}
+              price={item.price}
+              onAdd={() => console.log('Add item')}
+            />
+          ))}
+      </ScrollView>
       <PaymentButton />
     </View>
   );
+};
+return <CategoryList />;
 }
 
 const styles = StyleSheet.create({
   container: {
+    position: "fixed",
     flex: 1,
-    padding: 20,
+    padding: 10,
+    paddingBottom: 20,
     backgroundColor: '#19301B',
   },
   search: {
@@ -105,8 +119,8 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 40,
     borderRadius: 50,
-    justifyContent: 'center', // center child elements vertically
-    alignItems: 'center', // center child elements horizontally
+    justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
   },
   magnifier: {
@@ -117,16 +131,38 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'light',
+    fontWeight: '300',
     color: '#000000',
     opacity: 0.7,
   },
+  categoryItem: {
+    backgroundColor: "#D9D9D9",
+    opacity: 0.7, 
+    padding:  10,
+    paddingHorizontal: 20,
+    borderRadius: 17,
+    marginHorizontal: 5,
+    height: 40,
+  },
+  categoryText: {
+    color: '#000',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  CategoryList: {
+    marginVertical: 10,
+    flexDirection: "row",
+  },
   menuContainer: {
     width: '100%',
-    marginBottom: 20,
-    alignItems: 'center', // center child elements horizontally
+    // marginBottom: -300,
   },
   menuItem: {
+    alignSelf: 'stretch',
+    backgroundColor: '#D9D9D9',
+    opacity: 0.3,
+    padding: 50,
+    borderRadius: 30,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -135,32 +171,45 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 16,
-    color: '#333',
+    color: '#FFFFFF',
   },
   priceText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',},
   addButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#D9D9D9',
+    opacity: 0.5,
     borderRadius: 4,
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'light',
     textAlign: 'center',
-    textTransform: 'uppercase',
   },
   paymentButton: {
-    backgroundColor: '#4CAF50',
-    borderRadius: 4,
+    backgroundColor: '#19301B',
+    borderRadius: 30,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    width: '100%',
+    width: '90%',
+    alignSelf: "center",
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  paymentContainer:{
+  position: "fixed",
+  backgroundColor: "#FFFFFF",
+  padding: 20,
+  width: 410,
+  alignSelf: "center",
+  // borderBottomEndRadius: 50,
+  // borderBottomStartRadius: 50,
+  borderTopStartRadius: 50,
+  borderTopEndRadius: 50,
+  // borderBottomEndRadius: 50,
   },
 });
