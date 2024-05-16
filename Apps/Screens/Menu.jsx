@@ -2,13 +2,20 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, FlatList, ScrollView } from 'react-native';
 import { debounce } from 'lodash';
 import Magnifier from "./../../assets/images/magnifier.png";
+import STC from "./../../assets/images/STC.jpg";
+import A from "./../../assets/images/A.jpg";
+import ASM from "./../../assets/images/ASM.jpg";
+import CC from "./../../assets/images/CC.jpg";
+import KSJ from "./../../assets/images/KSJ.jpg";
+import JA from "./../../assets/images/JA.jpg";
 
 export default function Menu () {
+  
 const SearchBar = () => {
   const [searchText, setSearchText] = useState('');
 
   const handleSearch = debounce((text) => {
-    // perform search logic here
+    setSearchText(text);
   }, 500);
 
   return (
@@ -35,15 +42,18 @@ const CategoryItem = ({ name, onPress }) => {
   );
 };
 
-const MenuItem = ({ name, price, onAdd }) => {
+const MenuItem = ({ name, price, imageSource, onAdd }) => {
   return (
     <View style={styles.menuItem}>
+    <Image source={imageSource} style={styles.menuImage} />
+    <View style={styles.menuDetails}>
       <Text style={styles.menuText}>{name}</Text>
       <Text style={styles.priceText}>{price}</Text>
-      <TouchableOpacity style={styles.addButton} onPress={onAdd}>
-        <Text style={styles.buttonText}>+ Add</Text>
-      </TouchableOpacity>
     </View>
+    <TouchableOpacity style={styles.addButton} onPress={onAdd}>
+      <Text style={styles.buttonText}>+Add</Text>
+    </TouchableOpacity>
+  </View>
   );
 };
 
@@ -70,29 +80,30 @@ const handleCategoryPress = (category) => {
   };
 
 const menuItems = [
-  { name: 'Space To Create', price: 'Rp. 25,000' },
-  { name: 'Americano', price: 'Rp. 20,000' },
-  { name: 'Chicken Chop', price: 'Rp. 53,000' },
-  { name: 'Jiwani Aren', price: 'Rp. 24.000'},
-  { name: 'Ayam Sambal Matah', price: 'Rp. 46.000'},
-  { name: 'Kopi Susu Jiwani', price: 'Rp. 23.000'},
+  { name: 'Space To Create', price: 'Rp. 25,000', imageSource: STC},
+  { name: 'Americano', price: 'Rp. 20,000', imageSource: A },
+  { name: 'Chicken Chop', price: 'Rp. 53,000', imageSource: CC },
+  { name: 'Jiwani Aren', price: 'Rp. 24.000', imageSource: JA},
+  { name: 'Ayam Sambal Matah', price: 'Rp. 46.000', imageSource: ASM},
+  { name: 'Kopi Susu Jiwani', price: 'Rp. 23.000', imageSource: KSJ},
 
 ];
 
   return (
     <View style={styles.container}>
       <SearchBar />
-      <ScrollView style={styles.menuContainer}>
         <View style={styles.CategoryList}>
       {categories.map((item, index) => (
         <CategoryItem key={index.toString()} name={item.name} onPress={handleCategoryPress} />
         ))}
         </View>
+        <ScrollView style={styles.menuContainer}>
       {menuItems.map((item, index) => (
             <MenuItem
               key={index.toString()}
               name={item.name}
               price={item.price}
+              imageSource={item.imageSource}
               onAdd={() => console.log('Add item')}
             />
           ))}
@@ -109,7 +120,7 @@ const styles = StyleSheet.create({
     position: "fixed",
     flex: 1,
     padding: 10,
-    paddingBottom: 20,
+    paddingBottom: -10,
     backgroundColor: '#19301B',
   },
   search: {
@@ -118,7 +129,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 10,
     marginTop: 40,
-    borderRadius: 50,
+    borderRadius: 50, 
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
@@ -138,11 +149,11 @@ const styles = StyleSheet.create({
   categoryItem: {
     backgroundColor: "#D9D9D9",
     opacity: 0.7, 
-    padding:  10,
-    paddingHorizontal: 20,
+    padding:  5,
+    paddingHorizontal: 15,
     borderRadius: 17,
-    marginHorizontal: 5,
-    height: 40,
+    marginHorizontal: 3,
+    height: 30,
   },
   categoryText: {
     color: '#000',
@@ -159,8 +170,7 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     alignSelf: 'stretch',
-    backgroundColor: '#D9D9D9',
-    opacity: 0.3,
+    backgroundColor: '#395D50',
     padding: 50,
     borderRadius: 30,
     flexDirection: 'row',
@@ -168,6 +178,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     marginBottom: 10,
+  },
+  menuImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  menuDetails: {
+    flex: 1,
   },
   menuText: {
     fontSize: 16,
@@ -206,10 +225,7 @@ const styles = StyleSheet.create({
   padding: 20,
   width: 410,
   alignSelf: "center",
-  // borderBottomEndRadius: 50,
-  // borderBottomStartRadius: 50,
   borderTopStartRadius: 50,
   borderTopEndRadius: 50,
-  // borderBottomEndRadius: 50,
   },
 });
