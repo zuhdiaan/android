@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    // paddingBottom: -10,
+    paddingBottom: -10,
     backgroundColor: '#19301B',
   },
   search: {
