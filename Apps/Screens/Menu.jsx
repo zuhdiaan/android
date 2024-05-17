@@ -1,23 +1,40 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, FlatList, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, ScrollView } from 'react-native';
 import { debounce } from 'lodash';
 import Magnifier from "./../../assets/images/magnifier.png";
 import STC from "./../../assets/images/STC.jpg";
 import A from "./../../assets/images/A.jpg";
 import ASM from "./../../assets/images/ASM.jpg";
 import CC from "./../../assets/images/CC.jpg";
-import KSJ from "./../../assets/images/KSJ.jpg";
+import CM from "./../../assets/images/CM.jpg";
 import JA from "./../../assets/images/JA.jpg";
 
+const menuItems = [
+  { name: 'Space To Create', price: 'Rp. 25,000', imageSource: STC},
+  { name: 'Americano', price: 'Rp. 20,000', imageSource: A},
+  { name: 'Chicken Chop', price: 'Rp. 53,000', imageSource: CC},
+  { name: 'Jiwani Aren', price: 'Rp. 24.000', imageSource: JA},
+  { name: 'Ayam Sambal Matah', price: 'Rp. 46.000', imageSource: ASM},
+  { name: 'Choco Mint', price: 'Rp. 29.000', imageSource: CM},
+];
+
 export default function Menu () {
-  
-const SearchBar = () => {
   const [searchText, setSearchText] = useState('');
+  const [filteredItems, setFilteredItems] = useState([]);
 
-  const handleSearch = debounce((text) => {
-    setSearchText(text);
-  }, 500);
 
+  useEffect(() => {
+    if (searchText === '') {
+      setFilteredItems(menuItems);
+    } else {
+      const filtered = menuItems.filter(item => 
+        item.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setFilteredItems(filtered);
+    }
+  }, [searchText]);
+
+const SearchBar = ({searchText, setSearchText}) => {
   return (
     <View style={styles.search}>
       <Image source={Magnifier} style={styles.magnifier} />
@@ -25,10 +42,7 @@ const SearchBar = () => {
         style={styles.title}
         placeholder='Search on Menu'
         value={searchText}
-        onChangeText={(text) => {
-          setSearchText(text);
-          handleSearch(text);
-        }}
+        onChangeText={(text) => setSearchText(text)}
       />
     </View>
   );
@@ -79,26 +93,16 @@ const handleCategoryPress = (category) => {
     console.log(`${category} pressed`);
   };
 
-const menuItems = [
-  { name: 'Space To Create', price: 'Rp. 25,000', imageSource: STC},
-  { name: 'Americano', price: 'Rp. 20,000', imageSource: A },
-  { name: 'Chicken Chop', price: 'Rp. 53,000', imageSource: CC },
-  { name: 'Jiwani Aren', price: 'Rp. 24.000', imageSource: JA},
-  { name: 'Ayam Sambal Matah', price: 'Rp. 46.000', imageSource: ASM},
-  { name: 'Kopi Susu Jiwani', price: 'Rp. 23.000', imageSource: KSJ},
-
-];
-
   return (
     <View style={styles.container}>
-      <SearchBar />
+      <SearchBar searchText={searchText} setSearchText={setSearchText}/>
         <View style={styles.CategoryList}>
       {categories.map((item, index) => (
         <CategoryItem key={index.toString()} name={item.name} onPress={handleCategoryPress} />
         ))}
         </View>
         <ScrollView style={styles.menuContainer}>
-      {menuItems.map((item, index) => (
+      {filteredItems.map((item, index) => (
             <MenuItem
               key={index.toString()}
               name={item.name}
@@ -117,10 +121,9 @@ return <CategoryList />;
 
 const styles = StyleSheet.create({
   container: {
-    position: "fixed",
     flex: 1,
     padding: 10,
-    paddingBottom: -10,
+    // paddingBottom: -10,
     backgroundColor: '#19301B',
   },
   search: {
