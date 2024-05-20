@@ -10,12 +10,12 @@ import CM from "./../../assets/images/CM.jpg";
 import JA from "./../../assets/images/JA.jpg";
 
 const menuItems = [
-  { name: 'Space To Create', price: 'Rp. 25,000', imageSource: STC},
-  { name: 'Americano', price: 'Rp. 20,000', imageSource: A},
-  { name: 'Chicken Chop', price: 'Rp. 53,000', imageSource: CC},
-  { name: 'Jiwani Aren', price: 'Rp. 24.000', imageSource: JA},
-  { name: 'Ayam Sambal Matah', price: 'Rp. 46.000', imageSource: ASM},
-  { name: 'Choco Mint', price: 'Rp. 29.000', imageSource: CM},
+  { name: 'Space To Create', price: 'Rp. 25,000', imageSource: STC, category: 'Coffee'},
+  { name: 'Americano', price: 'Rp. 20,000', imageSource: A, category: 'Coffee'},
+  { name: 'Chicken Chop', price: 'Rp. 53,000', imageSource: CC, category: 'Eat-ables'},
+  { name: 'Jiwani Aren', price: 'Rp. 24.000', imageSource: JA, category: 'Coffee'},
+  { name: 'Ayam Sambal Matah', price: 'Rp. 46.000', imageSource: ASM, category: 'Eat-ables'},
+  { name: 'Choco Mint', price: 'Rp. 29.000', imageSource: CM, category: 'Non Coffee'},
 ];
 
 export default function Menu () {
@@ -90,8 +90,13 @@ const CategoryList = () => {
 ];
 
 const handleCategoryPress = (category) => {
-    console.log(`${category} pressed`);
-  };
+  if (category === 'All') {
+    setFilteredItems(menuItems);
+  } else {
+    const filtered = menuItems.filter(item => item.category === category);
+    setFilteredItems(filtered);
+  }
+};
 
   return (
     <View style={styles.container}>
