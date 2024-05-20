@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, ScrollView } from 'react-native';
-import { debounce } from 'lodash';
 import Magnifier from "./../../assets/images/magnifier.png";
 import STC from "./../../assets/images/STC.jpg";
 import A from "./../../assets/images/A.jpg";
@@ -10,20 +9,27 @@ import CM from "./../../assets/images/CM.jpg";
 import JA from "./../../assets/images/JA.jpg";
 
 const menuItems = [
-  { name: 'Space To Create', price: 'Rp. 25,000', imageSource: STC, category: 'Coffee'},
-  { name: 'Americano', price: 'Rp. 20,000', imageSource: A, category: 'Coffee'},
-  { name: 'Chicken Chop', price: 'Rp. 53,000', imageSource: CC, category: 'Eat-ables'},
-  { name: 'Jiwani Aren', price: 'Rp. 24.000', imageSource: JA, category: 'Coffee'},
-  { name: 'Ayam Sambal Matah', price: 'Rp. 46.000', imageSource: ASM, category: 'Eat-ables'},
-  { name: 'Choco Mint', price: 'Rp. 29.000', imageSource: CM, category: 'Non Coffee'},
+  { id: 1, name: 'Space To Create', price: 'Rp. 25,000', imageSource: STC, category: 'Coffee'},
+  { id: 2, name: 'Americano', price: 'Rp. 20,000', imageSource: A, category: 'Coffee'},
+  { id: 3, name: 'Chicken Chop', price: 'Rp. 53,000', imageSource: CC, category: 'Eat-ables'},
+  { id: 4, name: 'Jiwani Aren', price: 'Rp. 24.000', imageSource: JA, category: 'Coffee'},
+  { id: 5, name: 'Ayam Sambal Matah', price: 'Rp. 46.000', imageSource: ASM, category: 'Eat-ables'},
+  { id: 6, name: 'Choco Mint', price: 'Rp. 29.000', imageSource: CM, category: 'Non Coffee'},
 ];
 
-export default function Menu () {
+export default function Menu({ navigation }) {
   const [searchText, setSearchText] = useState('');
-  const [filteredItems, setFilteredItems] = useState([]);
-
+  const [filteredItems, setFilteredItems] = useState(menuItems);
+  const [itemCounts, setItemCounts] = useState(menuItems.reduce((acc, item) => {
+    acc[item.id] = 0;
+    return acc;
+  }, {}));
 
   useEffect(() => {
+    filterItems();
+  }, [searchText]);
+
+  const filterItems = () => {
     if (searchText === '') {
       setFilteredItems(menuItems);
     } else {
@@ -32,96 +38,116 @@ export default function Menu () {
       );
       setFilteredItems(filtered);
     }
-  }, [searchText]);
+  };
 
-const SearchBar = ({searchText, setSearchText}) => {
-  return (
-    <View style={styles.search}>
-      <Image source={Magnifier} style={styles.magnifier} />
-      <TextInput
-        style={styles.title}
-        placeholder='Search on Menu'
-        value={searchText}
-        onChangeText={(text) => setSearchText(text)}
-      />
-    </View>
-  );
-};
+  const incrementCount = (id) => {
+    setItemCounts({ ...itemCounts, [id]: itemCounts[id] + 1 });
+  };
 
-const CategoryItem = ({ name, onPress }) => {
-  return (
-    <TouchableOpacity style={styles.categoryItem} onPress={() => onPress(name)}>
-      <Text style={styles.categoryText}>{name}</Text>
-    </TouchableOpacity>
-  );
-};
+  const decrementCount = (id) => {
+    if (itemCounts[id] > 0) {
+      setItemCounts({ ...itemCounts, [id]: itemCounts[id] - 1 });
+    }
+  };
 
-const MenuItem = ({ name, price, imageSource, onAdd }) => {
-  return (
-    <View style={styles.menuItem}>
-    <Image source={imageSource} style={styles.menuImage} />
-    <View style={styles.menuDetails}>
-      <Text style={styles.menuText}>{name}</Text>
-      <Text style={styles.priceText}>{price}</Text>
-    </View>
-    <TouchableOpacity style={styles.addButton} onPress={onAdd}>
-      <Text style={styles.buttonText}>+Add</Text>
-    </TouchableOpacity>
-  </View>
-  );
-};
+  const resetCount = (id) => {
+    setItemCounts({ ...itemCounts, [id]: 0 });
+  };
 
-const PaymentButton = () => {
-  return (
-    <View style={styles.paymentContainer}>
-    <TouchableOpacity style={styles.paymentButton}>
-      <Text style={styles.buttonText}>Choose Payment Method</Text>
-    </TouchableOpacity>
-    </View>
-  );
-};
+  const SearchBar = ({ searchText, setSearchText }) => {
+    return (
+      <View style={styles.search}>
+        <Image source={Magnifier} style={styles.magnifier} />
+        <TextInput
+          style={styles.title}
+          placeholder='Search on Menu'
+          value={searchText}
+          onChangeText={(text) => setSearchText(text)}
+        />
+      </View>
+    );
+  };
 
-const CategoryList = () => {
-  const categories = [
-  { name: 'All' },
-  { name: 'Coffee' },
-  { name: 'Non Coffee' },
-  { name: 'Eat-ables' },
-];
+  const CategoryItem = ({ name, onPress }) => {
+    return (
+      <TouchableOpacity style={styles.categoryItem} onPress={() => onPress(name)}>
+        <Text style={styles.categoryText}>{name}</Text>
+      </TouchableOpacity>
+    );
+  };
 
-const handleCategoryPress = (category) => {
-  if (category === 'All') {
-    setFilteredItems(menuItems);
-  } else {
-    const filtered = menuItems.filter(item => item.category === category);
-    setFilteredItems(filtered);
-  }
-};
+  const MenuItem = ({ item }) => {
+    const quantity = itemCounts[item.id] || 0;
 
-  return (
-    <View style={styles.container}>
-      <SearchBar searchText={searchText} setSearchText={setSearchText}/>
+    return (
+      <View style={styles.menuItem}>
+        <Image source={item.imageSource} style={styles.menuImage} />
+        <View style={styles.menuDetails}>
+          <Text style={styles.menuText}>{item.name}</Text>
+          <Text style={styles.priceText}>{item.price}</Text>
+        </View>
+        <View style={styles.counterContainer}>
+          <TouchableOpacity style={styles.counterButton} onPress={() => decrementCount(item.id)}>
+            <Text style={styles.counterButtonText}>-</Text>
+          </TouchableOpacity>
+          <Text style={styles.counterText}>{itemCounts[item.id]}</Text>
+          <TouchableOpacity style={styles.counterButton} onPress={() => incrementCount(item.id)}>
+            <Text style={styles.counterButtonText}>+</Text>
+          </TouchableOpacity>
+        </View>
+        {/* <TouchableOpacity style={styles.addButton} onPress={() => console.log('Add item')}>
+          <Text style={styles.buttonText}>+Add</Text>
+        </TouchableOpacity> */}
+      </View>
+    );
+  };
+
+  const PaymentButton = () => {
+    return (
+      <View style={styles.paymentContainer}>
+        <TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts })}>
+          <Text style={styles.buttonText}>Choose Payment Method</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const CategoryList = () => {
+    const categories = [
+      { name: 'All' },
+      { name: 'Coffee' },
+      { name: 'Non Coffee' },
+      { name: 'Eat-ables' },
+    ];
+
+    const handleCategoryPress = (category) => {
+      if (category === 'All') {
+        setFilteredItems(menuItems);
+      } else {
+        const filtered = menuItems.filter(item => item.category === category);
+        setFilteredItems(filtered);
+      }
+    };
+
+    return (
+      <View style={styles.container}>
+        <SearchBar searchText={searchText} setSearchText={setSearchText}/>
         <View style={styles.CategoryList}>
-      {categories.map((item, index) => (
-        <CategoryItem key={index.toString()} name={item.name} onPress={handleCategoryPress} />
-        ))}
+          {categories.map((item, index) => (
+            <CategoryItem key={index.toString()} name={item.name} onPress={handleCategoryPress} />
+          ))}
         </View>
         <ScrollView style={styles.menuContainer}>
-      {filteredItems.map((item, index) => (
-            <MenuItem
-              key={index.toString()}
-              name={item.name}
-              price={item.price}
-              imageSource={item.imageSource}
-              onAdd={() => console.log('Add item')}
-            />
+          {filteredItems.map((item, index) => (
+            <MenuItem key={index.toString()} item={item} />
           ))}
-      </ScrollView>
-      <PaymentButton />
-    </View>
-  );
-};
-return <CategoryList />;
+        </ScrollView>
+        <PaymentButton />
+      </View>
+    );
+  };
+
+  return <CategoryList />;
 }
 
 const styles = StyleSheet.create({
@@ -174,7 +200,6 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     width: '100%',
-    // marginBottom: -300,
   },
   menuItem: {
     alignSelf: 'stretch',
