@@ -105,7 +105,7 @@ export default function Menu({ navigation }) {
   const PaymentButton = () => {
     return (
       <View style={styles.paymentContainer}>
-        <TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts })}>
+        <TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts, menuItems })}>
           <Text style={styles.buttonText}>Choose Payment Method</Text>
         </TouchableOpacity>
       </View>
