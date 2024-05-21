@@ -86,13 +86,13 @@ export default function Menu({ navigation }) {
           <Text style={styles.menuText}>{item.name}</Text>
           <Text style={styles.priceText}>{item.price}</Text>
         </View>
-        <View style={styles.counterContainer}>
-          <TouchableOpacity style={styles.counterButton} onPress={() => decrementCount(item.id)}>
-            <Text style={styles.counterButtonText}>-</Text>
+        <View style={styles.addButton}>
+          <TouchableOpacity style={styles.buttonText} onPress={() => decrementCount(item.id)}>
+            <Text style={styles.buttonText}>-  </Text>
           </TouchableOpacity>
-          <Text style={styles.counterText}>{itemCounts[item.id]}</Text>
-          <TouchableOpacity style={styles.counterButton} onPress={() => incrementCount(item.id)}>
-            <Text style={styles.counterButtonText}>+</Text>
+          <Text style={styles.buttonText}>{itemCounts[item.id]}</Text>
+          <TouchableOpacity style={styles.buttonText} onPress={() => incrementCount(item.id)}>
+            <Text style={styles.buttonText}> +</Text>
           </TouchableOpacity>
         </View>
         {/* <TouchableOpacity style={styles.addButton} onPress={() => console.log('Add item')}>
@@ -235,6 +235,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingVertical: 10,
     paddingHorizontal: 20,
+    flexDirection: 'row',
   },
   buttonText: {
     color: '#FFFFFF',
