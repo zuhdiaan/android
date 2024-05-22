@@ -8,7 +8,8 @@ export default function Payment({ route }) {
   useEffect(() => {
     let total = 0;
     for (const item of menuItems) {
-      total += itemCounts[item.id] * parseFloat(item.price.replace('Rp. ', '').replace(',', ''));
+      const itemPrice = parseFloat(item.price.replace('Rp. ', '').replace('.', '').replace(',', ''));
+      total += itemCounts[item.id] * itemPrice;
     }
     setTotalPrice(total);
   }, [itemCounts, menuItems]);
@@ -23,7 +24,7 @@ export default function Payment({ route }) {
             return (
               <View key={item.id} style={styles.item}>
                 <Text>{item.name}</Text>
-                <Text>{`Rp. ${item.price.toLocaleString('id-ID')} x ${quantity}`}</Text>
+                <Text>{`Rp. ${item.price} x ${quantity}`}</Text>
               </View>
             );
           }
