@@ -16,7 +16,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Homepage">
         <Stack.Screen name="Homepage" component={Homepage} options={{ headerShown: false }} />
         <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }}/>
-        <Stack.Screen name="Payment" component={Payment} options={{ headerShown: false}}/>
+        <Stack.Screen name="Payment" component={Payment} options={{ title: "Order Summary", headerTitleAlign: 'center', headerTitleStyle: {fontSize: 24, color: '#FFFFFF', fontWeight: 'bold' }, headerStyle: { backgroundColor: "#19301B"}, headerTintColor: '#FFFFFF'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function Payment({ route }) {
   const { itemCounts, menuItems } = route.params;
@@ -16,15 +16,20 @@ export default function Payment({ route }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Payment Details</Text>
+      <Text style={styles.title}>Items</Text>
       <View style={styles.itemList}>
         {menuItems.map((item) => {
           const quantity = itemCounts[item.id] || 0;
           if (quantity > 0) {
+            const itemPrice = parseFloat(item.price.replace('Rp. ', '').replace('.', '').replace(',', ''));
+            const itemTotalPrice = itemPrice * (itemCounts[item.id] || 0);
             return (
               <View key={item.id} style={styles.item}>
-                <Text>{item.name}</Text>
-                <Text>{`Rp. ${item.price} x ${quantity}`}</Text>
+                  <View style={styles.itemInfo}>
+                <Text style={styles.itemText}>{item.name}</Text>
+                <Text style={styles.itemText}>{`${item.price} x ${quantity}`}</Text>
+                  </View>
+                <Text style={styles.itemText2}>{`Rp. ${itemTotalPrice.toLocaleString('id-ID')}`}</Text>
               </View>
             );
           }
@@ -32,6 +37,16 @@ export default function Payment({ route }) {
         })}
       </View>
       <Text style={styles.total}>Total: Rp. {totalPrice.toLocaleString('id-ID')}</Text>
+      <View style={styles.methodeContainer}>
+        <TouchableOpacity style={styles.methodeButton} onPress={() => console.log('click2')}>
+          <Text style={styles.methodeText}>...</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.paymentContainer}>
+        <TouchableOpacity style={styles.paymentButton} onPress={() => console.log('click')}>
+          <Text style={styles.buttonText}>Place Order</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -45,19 +60,87 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: "#19301B",
+    marginBottom: 10,
   },
   itemList: {
+    padding: 20,
     marginBottom: 20,
+    borderRadius: 20,
+  },
+  itemInfo: {
+    flex: 1,
+  },
+  itemText: {
+    marginBottom: 10,
+    color: "#FFFFFF",
+  },
+  itemText2: {
+    color: "#FFFFFF",
+    marginLeft: 10,
   },
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+    backgroundColor: '#1A3B21',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
   },
   total: {
     fontSize: 20,
+    color: "#19301B",
     fontWeight: 'bold',
     textAlign: 'right',
+    marginTop: 10,
+    paddingRight: 20,
+  },
+  buttonText: {
+    color: '#19301B',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  paymentButton: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    width: '90%',
+    alignSelf: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paymentContainer: {
+    position: "absolute",
+    backgroundColor: "#19301B",
+    padding: 20,
+    width: 415,
+    alignSelf: "center",
+    borderTopStartRadius: 50,
+    borderTopEndRadius: 50,
+    marginTop: 710,
+  },
+  methodeText: {
+    color: '#19301B',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  methodeButton: {
+    backgroundColor: '#19301B',
+    paddingHorizontal: 10,
+    marginRight: 20,
+    padding: 5,
+    borderRadius: 150,
+    alignSelf: "flex-end",
+  },
+  methodeContainer: {
+    position: "absolute",
+    backgroundColor: "#ACC1BA",
+    padding: 10,
+    width: 415,
+    height: 150,
+    alignSelf: "center",
+    marginTop: 660,
   },
 });

@@ -242,12 +242,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   paymentContainer: {
-    position: "fixed",
+    position: "absolute",
     backgroundColor: "#FFFFFF",
     padding: 20,
     width: 410,
     alignSelf: "center",
     borderTopStartRadius: 50,
     borderTopEndRadius: 50,
+    marginTop: 790,
   },
 });
