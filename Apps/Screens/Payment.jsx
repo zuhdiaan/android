@@ -36,12 +36,17 @@ export default function Payment({ route }) {
           return null;
         })}
       </View>
+      <View style={styles.totalContainer}>
       <Text style={styles.total}>Total: Rp. {totalPrice.toLocaleString('id-ID')}</Text>
-      <View style={styles.methodeContainer}>
-        <TouchableOpacity style={styles.methodeButton} onPress={() => console.log('click2')}>
-          <Text style={styles.methodeText}>...</Text>
-        </TouchableOpacity>
       </View>
+        <TouchableOpacity style={styles.methodeContainer} onPress={() => console.log('click2')}>
+        <View style={styles.methodeTextContainer}>
+            <Text style={styles.methodeText}>Payment Methods</Text>
+            <View style={styles.methodeText2Container}>
+            <Text style={styles.methodeText2}>...</Text>
+            </View>
+        </View>
+        </TouchableOpacity>
       <View style={styles.paymentContainer}>
         <TouchableOpacity style={styles.paymentButton} onPress={() => console.log('click')}>
           <Text style={styles.buttonText}>Place Order</Text>
@@ -88,13 +93,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
   },
+  totalContainer: {
+    marginTop: 180,
+    borderRadius: 50,
+    padding: 20,
+    backgroundColor: '#375139',
+  },
   total: {
-    fontSize: 20,
-    color: "#19301B",
+    fontSize: 24,
+    color: "#FFFFFF",
     fontWeight: 'bold',
-    textAlign: 'right',
-    marginTop: 10,
-    paddingRight: 20,
+    textAlign: 'center',
   },
   buttonText: {
     color: '#19301B',
@@ -121,9 +130,29 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 50,
     marginTop: 710,
   },
+  methodeTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   methodeText: {
     color: '#19301B',
+    fontWeight: 'bold',
     fontSize: 18,
+    textAlign: 'left',
+  },
+  methodeText2Container: {
+    backgroundColor: "#19301B",
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  methodeText2: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: '900',
     textAlign: 'center',
   },
   methodeButton: {
