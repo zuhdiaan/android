@@ -254,7 +254,6 @@ const styles = StyleSheet.create({
   },
   addButtonContainer: {
     alignItems: 'flex-end',
-    marginTop: 10,
   },
   addButtonContainer2: {
     backgroundColor: '#96A197',
