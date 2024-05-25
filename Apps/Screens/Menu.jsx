@@ -9,14 +9,7 @@ import CC from "./../../assets/images/CC.jpg";
 import CM from "./../../assets/images/CM.jpg";
 import JA from "./../../assets/images/JA.jpg";
 
-const menuItems = [
-  { id: 1, name: 'Space To Create', price: 'Rp. 25,000', imageSource: STC, category: 'Coffee' },
-  { id: 2, name: 'Americano', price: 'Rp. 20,000', imageSource: A, category: 'Coffee' },
-  { id: 3, name: 'Chicken Chop', price: 'Rp. 53,000', imageSource: CC, category: 'Eat-ables' },
-  { id: 4, name: 'Jiwani Aren', price: 'Rp. 24.000', imageSource: JA, category: 'Coffee' },
-  { id: 5, name: 'Ayam Sambal Matah', price: 'Rp. 46.000', imageSource: ASM, category: 'Eat-ables' },
-  { id: 6, name: 'Choco Mint', price: 'Rp. 29.000', imageSource: CM, category: 'Non Coffee' },
-];
+const menuItems = [];
 
 const debouncedFilterItems = debounce((text, setFilteredItems) => {
   if (text === '') {
@@ -63,7 +56,7 @@ const MenuItem = memo(({ item, itemCounts, incrementCount, decrementCount, index
       <View style={styles.menuDetailsContainer}>
         <View style={styles.menuDetails}>
           <Text style={styles.menuText}>{item.name}</Text>
-          <Text style={styles.priceText}>{item.price}</Text>
+          <Text style={styles.priceText}>Rp. {item.price}</Text>
         </View>
         <View style={styles.addButtonContainer}>
           {quantity === 0 ? (
@@ -95,6 +88,27 @@ export default function Menu({ navigation }) {
     return acc;
   }, {}));
   const [selectedCategory, setSelectedCategory] = useState('All');
+
+  useEffect(() => {
+    fetch('http://10.0.2.2:3000/api/menu_items')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Fetched data:', data);
+        menuItems.length = 0; // Clear the array
+        menuItems.push(...data); // Populate the array with the fetched data
+        setFilteredItems([...data]); // Update filteredItems with the new data
+        setItemCounts(data.reduce((acc, item) => {
+          acc[item.id] = 0;
+          return acc;
+        }, {}));
+      })
+      .catch(error => console.error('Error fetching menu items:', error.message));
+  }, []);  
 
   useEffect(() => {
     debouncedFilterItems(searchText, setFilteredItems);
@@ -140,184 +154,188 @@ export default function Menu({ navigation }) {
         ))}
       </View>
       <ScrollView style={styles.menuContainer}>
-        {filteredItems.map((item, index) => (
-          <MenuItem
-            key={item.id}
-            item={item}
-            itemCounts={itemCounts}
-            incrementCount={incrementCount}
-            decrementCount={decrementCount}
-            index={index}
-            totalItems={filteredItems.length}
-          />
-        ))}
-      </ScrollView>
-      <View style={styles.paymentContainer}>
-        <TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts, menuItems })}>
-          <Text style={styles.buttonText3}>Choose Payment Method</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+      {filteredItems.length === 0 ? (
+  <Text>No items found</Text>
+) : (
+  filteredItems.map((item, index) => (
+    <MenuItem
+      key={item.id}
+      item={item}
+      itemCounts={itemCounts}
+      incrementCount={incrementCount}
+      decrementCount={decrementCount}
+      index={index}
+      totalItems={filteredItems.length}
+    />
+  ))
+)}
+</ScrollView>
+<View style={styles.paymentContainer}>
+<TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts, menuItems })}>
+<Text style={styles.buttonText3}>Choose Payment Method</Text>
+</TouchableOpacity>
+</View>
+</View>
+);
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    paddingBottom: -10,
-    backgroundColor: '#19301B',
-  },
-  search: {
-    backgroundColor: '#FFFFFF',
-    opacity: 0.7,
-    borderRadius: 50,
-    padding: 10,
-    marginTop: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  magnifier: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-    marginLeft: 30,  
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '300',
-    color: '#000000',
-    opacity: 0.7,
-  },
-  categoryItem: {
-    backgroundColor: "#617463",
-    opacity: 0.7,
-    padding: 5,
-    paddingHorizontal: 15,
-    borderRadius: 17,
-    marginHorizontal: 3,
-    height: 30,
-  },
-  selectedCategoryItem: {
-    backgroundColor: "#919D92",
-  },
-  categoryText: {
-    color: '#000',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  selectedCategoryText: {
-    color: '#19301B',
-  },
-  CategoryList: {
-    marginVertical: 10,
-    flexDirection: "row",
-  },
-  menuContainer: {
-    width: '100%',
-  },
-  menuItem: {
-    alignSelf: 'stretch',
-    backgroundColor: '#354F37',
-    padding: 20,
-    borderRadius: 30,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 10,
-  },
-  lastMenuItem: {
-    marginBottom: 90,
-  },
-  menuImage: {
-    width: 140,
-    height: 140,
-    borderRadius: 30,
-    marginRight: 10,
-  },
-  menuDetailsContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  menuDetails: {
-    alignItems: 'flex-start',
-    marginLeft: 30,
-  },
-  menuText: {
-    fontSize: 20,
-    fontWeight: '400',
-    color: '#FFFFFF',
-  },
-  priceText: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#FFFFFF',
-  },
-  addButtonContainer: {
-    alignItems: 'flex-end',
-  },
-  addButtonContainer2: {
-    backgroundColor: '#96A197',
-    borderRadius: 30,
-    alignItems: 'center',
-    marginTop: 10,
-    flexDirection: 'row',
-    marginLeft: 30,
-    marginTop: 10,
-  },
-  addButton: {
-    backgroundColor: '#96A197',
-    borderRadius: 30,
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    marginLeft: 30,
-    marginTop: 10,
-  },
-    addButton2: {
-    backgroundColor: '#96A197',
-    borderRadius: 30,
-    paddingVertical: 5,
-    paddingHorizontal: 15,
-    flexDirection: 'row',
-  },
-  buttonText: {
-    color: '#19301B',
-    fontSize: 18,
-    textAlign: 'center',
-  },
-  buttonText2: {
-    color: '#19301B',
-    fontSize: 18,
-    textAlign: 'center',
-  },
-  buttonText3: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    textAlign: 'center',
-  },
-  paymentButton: {
-    backgroundColor: '#19301B',
-    borderRadius: 30,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    width: '90%',
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paymentContainer: {
-    position: 'absolute',
-    backgroundColor: '#FFFFFF',
-    padding: 20,
-    width: 410,
-    alignSelf: 'center',
-    borderTopStartRadius: 50,
-    borderTopEndRadius: 50,
-    marginTop: 790,
-  },
+container: {
+flex: 1,
+padding: 10,
+paddingBottom: -10,
+backgroundColor: '#19301B',
+},
+search: {
+backgroundColor: '#FFFFFF',
+opacity: 0.7,
+borderRadius: 50,
+padding: 10,
+marginTop: 40,
+justifyContent: 'center',
+alignItems: 'center',
+flexDirection: 'row',
+},
+magnifier: {
+width: 20,
+height: 20,
+marginRight: 10,
+marginLeft: 30,
+},
+title: {
+fontSize: 18,
+fontWeight: '300',
+color: '#000000',
+opacity: 0.7,
+},
+categoryItem: {
+backgroundColor: "#617463",
+opacity: 0.7,
+padding: 5,
+paddingHorizontal: 15,
+borderRadius: 17,
+marginHorizontal: 3,
+height: 30,
+},
+selectedCategoryItem: {
+backgroundColor: "#919D92",
+},
+categoryText: {
+color: '#000',
+fontSize: 14,
+textAlign: 'center',
+},
+selectedCategoryText: {
+color: '#19301B',
+},
+CategoryList: {
+marginVertical: 10,
+flexDirection: "row",
+},
+menuContainer: {
+width: '100%',
+},
+menuItem: {
+alignSelf: 'stretch',
+backgroundColor: '#354F37',
+padding: 20,
+borderRadius: 30,
+flexDirection: 'row',
+alignItems: 'center',
+justifyContent: 'space-between',
+width: '100%',
+marginBottom: 10,
+},
+lastMenuItem: {
+marginBottom: 90,
+},
+menuImage: {
+width: 140,
+height: 140,
+borderRadius: 30,
+marginRight: 10,
+},
+menuDetailsContainer: {
+flex: 1,
+flexDirection: 'column',
+justifyContent: 'space-between',
+alignItems: 'flex-start',
+},
+menuDetails: {
+alignItems: 'flex-start',
+marginLeft: 30,
+},
+menuText: {
+fontSize: 20,
+fontWeight: '400',
+color: '#FFFFFF',
+},
+priceText: {
+fontSize: 16,
+fontWeight: '400',
+color: '#FFFFFF',
+},
+addButtonContainer: {
+alignItems: 'flex-end',
+},
+addButtonContainer2: {
+backgroundColor: '#96A197',
+borderRadius: 30,
+alignItems: 'center',
+marginTop: 10,
+flexDirection: 'row',
+marginLeft: 30,
+marginTop: 10,
+},
+addButton: {
+backgroundColor: '#96A197',
+borderRadius: 30,
+paddingVertical: 5,
+paddingHorizontal: 20,
+flexDirection: 'row',
+marginLeft: 30,
+marginTop: 10,
+},
+addButton2: {
+backgroundColor: '#96A197',
+borderRadius: 30,
+paddingVertical: 5,
+paddingHorizontal: 15,
+flexDirection: 'row',
+},
+buttonText: {
+color: '#19301B',
+fontSize: 18,
+textAlign: 'center',
+},
+buttonText2: {
+color: '#19301B',
+fontSize: 18,
+textAlign: 'center',
+},
+buttonText3: {
+color: '#FFFFFF',
+fontSize: 18,
+textAlign: 'center',
+},
+paymentButton: {
+backgroundColor: '#19301B',
+borderRadius: 30,
+paddingVertical: 10,
+paddingHorizontal: 20,
+width: '90%',
+alignSelf: 'center',
+alignItems: 'center',
+justifyContent: 'center',
+},
+paymentContainer: {
+position: 'absolute',
+backgroundColor: '#FFFFFF',
+padding: 20,
+width: 410,
+alignSelf: 'center',
+borderTopStartRadius: 50,
+borderTopEndRadius: 50,
+marginTop: 790,
+},
 });
