@@ -71,13 +71,13 @@ const MenuItem = memo(({ item, itemCounts, incrementCount, decrementCount }) => 
               <Text style={styles.buttonText2}>+ Add</Text>
             </TouchableOpacity>
           ) : (
-        <View style={styles.addButton}>
-          <TouchableOpacity style={styles.buttonText} onPress={() => decrementCount(item.id)}>
-            <Text style={styles.buttonText}>-  </Text>
+        <View style={styles.addButtonContainer2}>
+          <TouchableOpacity style={styles.addButton2} onPress={() => decrementCount(item.id)}>
+            <Text style={styles.buttonText}>-</Text>
           </TouchableOpacity>
           <Text style={styles.buttonText}>{quantity}</Text>
-          <TouchableOpacity style={styles.buttonText} onPress={() => incrementCount(item.id)}>
-            <Text style={styles.buttonText}>  +</Text>
+          <TouchableOpacity style={styles.addButton2} onPress={() => incrementCount(item.id)}>
+            <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
         </View>
           )}
@@ -255,7 +255,15 @@ const styles = StyleSheet.create({
   addButtonContainer: {
     alignItems: 'flex-end',
     marginTop: 10,
-    
+  },
+  addButtonContainer2: {
+    backgroundColor: '#96A197',
+    borderRadius: 30,
+    alignItems: 'center',
+    marginTop: 10,
+    flexDirection: 'row',
+    marginLeft: 30,
+    marginTop: 10,
   },
   addButton: {
     backgroundColor: '#96A197',
@@ -265,6 +273,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 30,
     marginTop: 10,
+  },
+    addButton2: {
+    backgroundColor: '#96A197',
+    borderRadius: 30,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    flexDirection: 'row',
   },
   buttonText: {
     color: '#19301B',
