@@ -60,18 +60,28 @@ const MenuItem = memo(({ item, itemCounts, incrementCount, decrementCount }) => 
   return (
     <View style={styles.menuItem}>
       <Image source={item.imageSource} style={styles.menuImage} />
-      <View style={styles.menuDetails}>
-        <Text style={styles.menuText}>{item.name}</Text>
-        <Text style={styles.priceText}>{item.price}</Text>
-      </View>
-      <View style={styles.addButton}>
-        <TouchableOpacity style={styles.buttonText} onPress={() => decrementCount(item.id)}>
-          <Text style={styles.buttonText}>-  </Text>
-        </TouchableOpacity>
-        <Text style={styles.buttonText}>{quantity}</Text>
-        <TouchableOpacity style={styles.buttonText} onPress={() => incrementCount(item.id)}>
-          <Text style={styles.buttonText}> +</Text>
-        </TouchableOpacity>
+      <View style={styles.menuDetailsContainer}>
+        <View style={styles.menuDetails}>
+          <Text style={styles.menuText}>{item.name}</Text>
+          <Text style={styles.priceText}>{item.price}</Text>
+        </View>
+        <View style={styles.addButtonContainer}>
+          {quantity === 0 ? (
+            <TouchableOpacity style={styles.addButton} onPress={() => incrementCount(item.id)}>
+              <Text style={styles.buttonText2}>+ Add</Text>
+            </TouchableOpacity>
+          ) : (
+        <View style={styles.addButton}>
+          <TouchableOpacity style={styles.buttonText} onPress={() => decrementCount(item.id)}>
+            <Text style={styles.buttonText}>-  </Text>
+          </TouchableOpacity>
+          <Text style={styles.buttonText}>{quantity}</Text>
+          <TouchableOpacity style={styles.buttonText} onPress={() => incrementCount(item.id)}>
+            <Text style={styles.buttonText}>  +</Text>
+          </TouchableOpacity>
+        </View>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -142,7 +152,7 @@ export default function Menu({ navigation }) {
       </ScrollView>
       <View style={styles.paymentContainer}>
         <TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts, menuItems })}>
-          <Text style={styles.buttonText}>Choose Payment Method</Text>
+          <Text style={styles.buttonText3}>Choose Payment Method</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -222,28 +232,51 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginRight: 10,
   },
-  menuDetails: {
+  menuDetailsContainer: {
     flex: 1,
-    alignItems: "flex-end"
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  menuDetails: {
+    alignItems: 'flex-start',
+    marginLeft: 30,
   },
   menuText: {
     fontSize: 20,
+    fontWeight: '400',
     color: '#FFFFFF',
   },
   priceText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '400',
     color: '#FFFFFF',
   },
+  addButtonContainer: {
+    alignItems: 'flex-end',
+    marginTop: 10,
+    
+  },
   addButton: {
-    backgroundColor: '#D9D9D9',
-    opacity: 0.5,
-    borderRadius: 4,
-    paddingVertical: 10,
+    backgroundColor: '#96A197',
+    borderRadius: 30,
+    paddingVertical: 5,
     paddingHorizontal: 20,
     flexDirection: 'row',
+    marginLeft: 30,
+    marginTop: 10,
   },
   buttonText: {
+    color: '#19301B',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  buttonText2: {
+    color: '#19301B',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  buttonText3: {
     color: '#FFFFFF',
     fontSize: 18,
     textAlign: 'center',
@@ -254,16 +287,16 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     width: '90%',
-    alignSelf: "center",
+    alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
   },
   paymentContainer: {
-    position: "absolute",
-    backgroundColor: "#FFFFFF",
+    position: 'absolute',
+    backgroundColor: '#FFFFFF',
     padding: 20,
     width: 410,
-    alignSelf: "center",
+    alignSelf: 'center',
     borderTopStartRadius: 50,
     borderTopEndRadius: 50,
     marginTop: 790,
