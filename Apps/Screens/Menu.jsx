@@ -43,10 +43,13 @@ const SearchBar = memo(({ searchText, setSearchText }) => {
   );
 });
 
-const CategoryItem = memo(({ name, onPress }) => {
+const CategoryItem = memo(({ name, onPress, isSelected }) => {
   return (
-    <TouchableOpacity style={styles.categoryItem} onPress={() => onPress(name)}>
-      <Text style={styles.categoryText}>{name}</Text>
+    <TouchableOpacity
+      style={[styles.categoryItem, isSelected && styles.selectedCategoryItem]}
+      onPress={() => onPress(name)}
+    >
+      <Text style={[styles.categoryText, isSelected && styles.selectedCategoryText]}>{name}</Text>
     </TouchableOpacity>
   );
 });
@@ -81,6 +84,7 @@ export default function Menu({ navigation }) {
     acc[item.id] = 0;
     return acc;
   }, {}));
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   useEffect(() => {
     debouncedFilterItems(searchText, setFilteredItems);
@@ -103,6 +107,7 @@ export default function Menu({ navigation }) {
   }, []);
 
   const handleCategoryPress = (category) => {
+    setSelectedCategory(category);
     if (category === 'All') {
       setFilteredItems(menuItems);
     } else {
@@ -116,7 +121,12 @@ export default function Menu({ navigation }) {
       <SearchBar searchText={searchText} setSearchText={setSearchText} />
       <View style={styles.CategoryList}>
         {['All', 'Coffee', 'Non Coffee', 'Eat-ables'].map((category, index) => (
-          <CategoryItem key={index.toString()} name={category} onPress={handleCategoryPress} />
+          <CategoryItem
+            key={index.toString()}
+            name={category}
+            onPress={handleCategoryPress}
+            isSelected={selectedCategory === category}
+          />
         ))}
       </View>
       <ScrollView style={styles.menuContainer}>
@@ -169,7 +179,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   categoryItem: {
-    backgroundColor: "#D9D9D9",
+    backgroundColor: "#617463",
     opacity: 0.7,
     padding: 5,
     paddingHorizontal: 15,
@@ -177,10 +187,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
     height: 30,
   },
+  selectedCategoryItem: {
+    backgroundColor: "#919D92",
+  },
   categoryText: {
     color: '#000',
     fontSize: 14,
     textAlign: 'center',
+  },
+  selectedCategoryText: {
+    color: '#19301B',
   },
   CategoryList: {
     marginVertical: 10,
@@ -191,8 +207,8 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     alignSelf: 'stretch',
-    backgroundColor: '#395D50',
-    padding: 50,
+    backgroundColor: '#354F37',
+    padding: 20,
     borderRadius: 30,
     flexDirection: 'row',
     alignItems: 'center',
@@ -201,22 +217,23 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   menuImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
+    width: 140,
+    height: 140,
+    borderRadius: 30,
     marginRight: 10,
   },
   menuDetails: {
     flex: 1,
+    alignItems: "flex-end"
   },
   menuText: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#FFFFFF',
   },
   priceText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FFFFFF',
   },
   addButton: {
     backgroundColor: '#D9D9D9',
