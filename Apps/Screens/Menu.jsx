@@ -54,12 +54,12 @@ const CategoryItem = memo(({ name, onPress, isSelected }) => {
   );
 });
 
-const MenuItem = memo(({ item, itemCounts, incrementCount, decrementCount }) => {
+const MenuItem = memo(({ item, itemCounts, incrementCount, decrementCount, index, totalItems }) => {
   const quantity = itemCounts[item.id] || 0;
 
   return (
-    <View style={styles.menuItem}>
-      <Image source={item.imageSource} style={styles.menuImage} />
+    <View style={[styles.menuItem, index === totalItems - 1 && styles.lastMenuItem]}>
+     <Image source={item.imageSource} style={styles.menuImage} />
       <View style={styles.menuDetailsContainer}>
         <View style={styles.menuDetails}>
           <Text style={styles.menuText}>{item.name}</Text>
@@ -140,13 +140,15 @@ export default function Menu({ navigation }) {
         ))}
       </View>
       <ScrollView style={styles.menuContainer}>
-        {filteredItems.map((item) => (
+        {filteredItems.map((item, index) => (
           <MenuItem
             key={item.id}
             item={item}
             itemCounts={itemCounts}
             incrementCount={incrementCount}
             decrementCount={decrementCount}
+            index={index}
+            totalItems={filteredItems.length}
           />
         ))}
       </ScrollView>
@@ -225,6 +227,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     marginBottom: 10,
+  },
+  lastMenuItem: {
+    marginBottom: 90,
   },
   menuImage: {
     width: 140,
