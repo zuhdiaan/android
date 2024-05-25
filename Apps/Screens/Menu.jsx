@@ -34,7 +34,7 @@ const SearchBar = memo(({ searchText, setSearchText }) => {
     <View style={styles.search}>
       <Image source={Magnifier} style={styles.magnifier} />
       <TextInput
-        style={styles.title}
+        style={[styles.title, { width: '100%' }]}
         placeholder='Search on Menu'
         value={searchText}
         onChangeText={(text) => setSearchText(text)}
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: 10,
-    marginLeft: -190,
+    marginLeft: 30,  
   },
   title: {
     fontSize: 18,
