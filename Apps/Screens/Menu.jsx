@@ -2,12 +2,6 @@ import React, { useState, useEffect, useCallback, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, ScrollView } from 'react-native';
 import debounce from 'lodash.debounce';
 import Magnifier from "./../../assets/images/magnifier.png";
-import STC from "./../../assets/images/STC.jpg";
-import A from "./../../assets/images/A.jpg";
-import ASM from "./../../assets/images/ASM.jpg";
-import CC from "./../../assets/images/CC.jpg";
-import CM from "./../../assets/images/CM.jpg";
-import JA from "./../../assets/images/JA.jpg";
 
 const menuItems = [];
 
@@ -180,169 +174,169 @@ export default function Menu({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-container: {
-flex: 1,
-padding: 10,
-paddingBottom: -10,
-backgroundColor: '#19301B',
-},
-search: {
-backgroundColor: '#FFFFFF',
-opacity: 0.7,
-borderRadius: 50,
-padding: 10,
-marginTop: 40,
-justifyContent: 'center',
-alignItems: 'center',
-flexDirection: 'row',
-},
-magnifier: {
-width: 20,
-height: 20,
-marginRight: 10,
-marginLeft: 30,
-},
-title: {
-fontSize: 18,
-fontWeight: '300',
-color: '#000000',
-opacity: 0.7,
-},
-categoryItem: {
-backgroundColor: "#617463",
-opacity: 0.7,
-padding: 5,
-paddingHorizontal: 15,
-borderRadius: 17,
-marginHorizontal: 3,
-height: 30,
-},
-selectedCategoryItem: {
-backgroundColor: "#919D92",
-},
-categoryText: {
-color: '#000',
-fontSize: 14,
-textAlign: 'center',
-},
-selectedCategoryText: {
-color: '#19301B',
-},
-CategoryList: {
-marginVertical: 10,
-flexDirection: "row",
-},
-menuContainer: {
-width: '100%',
-},
-menuItem: {
-alignSelf: 'stretch',
-backgroundColor: '#354F37',
-padding: 20,
-borderRadius: 30,
-flexDirection: 'row',
-alignItems: 'center',
-justifyContent: 'space-between',
-width: '100%',
-marginBottom: 10,
-},
-lastMenuItem: {
-marginBottom: 90,
-},
-menuImage: {
-width: 140,
-height: 140,
-borderRadius: 30,
-marginRight: 10,
-},
-menuDetailsContainer: {
-flex: 1,
-flexDirection: 'column',
-justifyContent: 'space-between',
-alignItems: 'flex-start',
-},
-menuDetails: {
-alignItems: 'flex-start',
-marginLeft: 30,
-},
-menuText: {
-fontSize: 20,
-fontWeight: '400',
-color: '#FFFFFF',
-},
-priceText: {
-fontSize: 16,
-fontWeight: '400',
-color: '#FFFFFF',
-},
-addButtonContainer: {
-alignItems: 'flex-end',
-},
-addButtonContainer2: {
-backgroundColor: '#96A197',
-borderRadius: 30,
-alignItems: 'center',
-marginTop: 10,
-flexDirection: 'row',
-marginLeft: 30,
-marginTop: 10,
-},
-addButton: {
-backgroundColor: '#96A197',
-borderRadius: 30,
-paddingVertical: 5,
-paddingHorizontal: 20,
-flexDirection: 'row',
-marginLeft: 30,
-marginTop: 10,
-},
-addButton2: {
-backgroundColor: '#96A197',
-borderRadius: 30,
-paddingVertical: 5,
-paddingHorizontal: 15,
-flexDirection: 'row',
-},
-buttonText: {
-color: '#19301B',
-fontSize: 18,
-textAlign: 'center',
-},
-buttonText2: {
-color: '#19301B',
-fontSize: 18,
-textAlign: 'center',
-},
-buttonText3: {
-color: '#FFFFFF',
-fontSize: 18,
-textAlign: 'center',
-},
-paymentButton: {
-backgroundColor: '#19301B',
-borderRadius: 30,
-paddingVertical: 10,
-paddingHorizontal: 20,
-width: '90%',
-alignSelf: 'center',
-alignItems: 'center',
-justifyContent: 'center',
-},
-paymentContainer: {
-position: 'absolute',
-backgroundColor: '#FFFFFF',
-padding: 20,
-width: 410,
-alignSelf: 'center',
-borderTopStartRadius: 50,
-borderTopEndRadius: 50,
-marginTop: 790,
-},
-noItems: {
-  fontSize: 20,
-  fontWeight: '200',
-  color: '#FFFFFF',
-  textAlign: "center",
-  marginTop: 250,
-},
+  container: {
+    flex: 1,
+    padding: 10,
+    paddingBottom: -10,
+    backgroundColor: '#19301B',
+  },
+  search: {
+    backgroundColor: '#FFFFFF',
+    opacity: 0.7,
+    borderRadius: 50,
+    padding: 10,
+    marginTop: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  magnifier: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+    marginLeft: 30,  
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '300',
+    color: '#000000',
+    opacity: 0.7,
+  },
+  categoryItem: {
+    backgroundColor: "#617463",
+    opacity: 0.7,
+    padding: 5,
+    paddingHorizontal: 15,
+    borderRadius: 17,
+    marginHorizontal: 3,
+    height: 30,
+  },
+  selectedCategoryItem: {
+    backgroundColor: "#919D92",
+  },
+  categoryText: {
+    color: '#000',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  selectedCategoryText: {
+    color: '#19301B',
+  },
+  CategoryList: {
+    marginVertical: 10,
+    flexDirection: "row",
+  },
+  menuContainer: {
+    width: '100%',
+  },
+  menuItem: {
+    alignSelf: 'stretch',
+    backgroundColor: '#354F37',
+    padding: 20,
+    borderRadius: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 10,
+  },
+  lastMenuItem: {
+    marginBottom: 90,
+  },
+  menuImage: {
+    width: 140,
+    height: 140,
+    borderRadius: 30,
+    marginRight: 10,
+  },
+  menuDetailsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  menuDetails: {
+    alignItems: 'flex-start',
+    marginLeft: 30,
+  },
+  menuText: {
+    fontSize: 20,
+    fontWeight: '400',
+    color: '#FFFFFF',
+  },
+  priceText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#FFFFFF',
+  },
+  addButtonContainer: {
+    alignItems: 'flex-end',
+  },
+  addButtonContainer2: {
+    backgroundColor: '#96A197',
+    borderRadius: 30,
+    alignItems: 'center',
+    marginTop: 10,
+    flexDirection: 'row',
+    marginLeft: 30,
+    marginTop: 10,
+  },
+  addButton: {
+    backgroundColor: '#96A197',
+    borderRadius: 30,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    marginLeft: 30,
+    marginTop: 10,
+  },
+    addButton2: {
+    backgroundColor: '#96A197',
+    borderRadius: 30,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+  },
+  buttonText: {
+    color: '#19301B',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  buttonText2: {
+    color: '#19301B',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  buttonText3: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  paymentButton: {
+    backgroundColor: '#19301B',
+    borderRadius: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    width: '90%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paymentContainer: {
+    position: 'absolute',
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    width: 410,
+    alignSelf: 'center',
+    borderTopStartRadius: 50,
+    borderTopEndRadius: 50,
+    marginTop: 790,
+  },
+  noItems: {
+    fontSize: 20,
+    fontWeight: '200',
+    color: '#FFFFFF',
+    textAlign: "center",
+    marginTop: 250,
+  },
 });
