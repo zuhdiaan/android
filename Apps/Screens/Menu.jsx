@@ -155,7 +155,7 @@ export default function Menu({ navigation }) {
       </View>
       <ScrollView style={styles.menuContainer}>
       {filteredItems.length === 0 ? (
-  <Text>No items found</Text>
+  <Text style={styles.noItems}>No items found</Text>
 ) : (
   filteredItems.map((item, index) => (
     <MenuItem
@@ -337,5 +337,12 @@ alignSelf: 'center',
 borderTopStartRadius: 50,
 borderTopEndRadius: 50,
 marginTop: 790,
+},
+noItems: {
+  fontSize: 20,
+  fontWeight: '200',
+  color: '#FFFFFF',
+  textAlign: "center",
+  marginTop: 250,
 },
 });
