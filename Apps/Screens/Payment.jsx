@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 
 export default function Payment({ route }) {
   const { itemCounts, menuItems } = route.params;
@@ -8,7 +8,7 @@ export default function Payment({ route }) {
   useEffect(() => {
     let total = 0;
     for (const item of menuItems) {
-      const itemPrice = parseFloat(item.price.replace('Rp. ', '').replace('.', '').replace(',', ''));
+      const itemPrice = parseFloat(item.price);
       total += itemCounts[item.id] * itemPrice;
     }
     setTotalPrice(total);
@@ -17,17 +17,17 @@ export default function Payment({ route }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Items</Text>
-      <View style={styles.itemList}>
+      <ScrollView style={styles.itemList}>
         {menuItems.map((item) => {
           const quantity = itemCounts[item.id] || 0;
           if (quantity > 0) {
-            const itemPrice = parseFloat(item.price.replace('Rp. ', '').replace('.', '').replace(',', ''));
+            const itemPrice = parseFloat(item.price);
             const itemTotalPrice = itemPrice * (itemCounts[item.id] || 0);
             return (
               <View key={item.id} style={styles.item}>
                   <View style={styles.itemInfo}>
                 <Text style={styles.itemText}>{item.name}</Text>
-                <Text style={styles.itemText}>{`${item.price} x ${quantity}`}</Text>
+                <Text style={styles.itemText}>{`Rp. ${item.price} x ${quantity}`}</Text>
                   </View>
                 <Text style={styles.itemText2}>{`Rp. ${itemTotalPrice.toLocaleString('id-ID')}`}</Text>
               </View>
@@ -35,7 +35,7 @@ export default function Payment({ route }) {
           }
           return null;
         })}
-      </View>
+      </ScrollView>
       <View style={styles.totalContainer}>
       <Text style={styles.total}>Total: Rp. {totalPrice.toLocaleString('id-ID')}</Text>
       </View>
@@ -69,8 +69,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemList: {
-    padding: 20,
-    marginBottom: 20,
+    padding: 10,
+    marginBottom: 175,
     borderRadius: 20,
   },
   itemInfo: {
@@ -94,9 +94,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   totalContainer: {
-    marginTop: 180,
+    position: 'absolute',
+    // alignContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 600,
     borderRadius: 50,
-    padding: 20,
+    padding: 10,
+    paddingHorizontal: 85,
     backgroundColor: '#375139',
   },
   total: {
