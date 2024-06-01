@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import axios from 'axios';
+import { WebView } from 'react-native-webview';
 
 export default function Payment({ route }) {
   const { itemCounts, menuItems } = route.params;
   const [totalPrice, setTotalPrice] = useState(0);
+  const [transactionToken, setTransactionToken] = useState(null);
 
   useEffect(() => {
     let total = 0;
@@ -11,8 +14,41 @@ export default function Payment({ route }) {
       const itemPrice = parseFloat(item.price);
       total += itemCounts[item.id] * itemPrice;
     }
-    setTotalPrice(total);
+    setTotalPrice(isNaN(total) ? 0 : total);
   }, [itemCounts, menuItems]);
+
+  const placeOrder = async () => {
+    try {
+      const formattedTotalPrice = totalPrice.toFixed(2);
+      console.log('Formatted Total Price:', formattedTotalPrice);
+      
+      const response = await axios.post('http://10.0.2.2:3000/api/transaction', {
+        orderId: `order-${Date.now()}`,
+        grossAmount: formattedTotalPrice,
+        customerDetails: {
+          first_name: 'Customer',
+          email: 'customer@example.com',
+          phone: '08123456789'
+        }
+      });
+      setTransactionToken(response.data.transactionToken);
+    } catch (error) {
+      console.error('Error placing order:', error);
+    }
+  };
+
+  if (transactionToken) {
+    return (
+      <WebView
+        source={{ uri: `https://app.sandbox.midtrans.com/snap/v2/vtweb/${transactionToken}` }}
+        onNavigationStateChange={(state) => {
+          if (state.url.includes('transaction_status')) {
+            // Handle the payment status
+          }
+        }}
+      />
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -48,7 +84,7 @@ export default function Payment({ route }) {
         {/* </View> */}
         {/* </TouchableOpacity> */}
       <View style={styles.paymentContainer}>
-        <TouchableOpacity style={styles.paymentButton} onPress={() => console.log('click')}>
+        <TouchableOpacity style={styles.paymentButton} onPress={placeOrder}>
           <Text style={styles.buttonText}>Place Order</Text>
         </TouchableOpacity>
       </View>
