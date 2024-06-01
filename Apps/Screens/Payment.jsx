@@ -39,14 +39,14 @@ export default function Payment({ route }) {
       <View style={styles.totalContainer}>
       <Text style={styles.total}>Total: Rp. {totalPrice.toLocaleString('id-ID')}</Text>
       </View>
-        <TouchableOpacity style={styles.methodeContainer} onPress={() => console.log('click2')}>
-        <View style={styles.methodeTextContainer}>
+        {/* <TouchableOpacity style={styles.methodeContainer} onPress={() => console.log('click2')}> */}
+        {/* <View style={styles.methodeTextContainer}>
             <Text style={styles.methodeText}>Payment Methods</Text>
             <View style={styles.methodeText2Container}>
             <Text style={styles.methodeText2}>...</Text>
-            </View>
-        </View>
-        </TouchableOpacity>
+            </View> */}
+        {/* </View> */}
+        {/* </TouchableOpacity> */}
       <View style={styles.paymentContainer}>
         <TouchableOpacity style={styles.paymentButton} onPress={() => console.log('click')}>
           <Text style={styles.buttonText}>Place Order</Text>
@@ -69,8 +69,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemList: {
-    padding: 10,
-    marginBottom: 175,
+    padding: 5,
+    marginBottom: 170,
     borderRadius: 20,
   },
   itemInfo: {
@@ -99,9 +99,9 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // justifyContent: 'center',
     alignSelf: 'center',
-    marginTop: 600,
+    marginTop: 610,
     borderRadius: 50,
-    padding: 10,
+    padding: 20,
     paddingHorizontal: 85,
     backgroundColor: '#375139',
   },
