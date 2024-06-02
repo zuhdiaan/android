@@ -21,7 +21,16 @@ export default function Payment({ route }) {
     try {
       const formattedTotalPrice = totalPrice.toFixed(2);
       console.log('Formatted Total Price:', formattedTotalPrice);
-      
+  
+      const orderedItems = menuItems
+        .filter(item => itemCounts[item.id] > 0)
+        .map(item => ({
+          id: item.id,
+          name: item.name,
+          price: parseFloat(item.price),
+          quantity: itemCounts[item.id]
+        }));
+  
       const response = await axios.post('http://10.0.2.2:3000/api/transaction', {
         orderId: `order-${Date.now()}`,
         grossAmount: formattedTotalPrice,
@@ -29,7 +38,8 @@ export default function Payment({ route }) {
           first_name: 'Customer',
           email: 'customer@example.com',
           phone: '08123456789'
-        }
+        },
+        orderedItems
       });
       setTransactionToken(response.data.transactionToken);
     } catch (error) {
