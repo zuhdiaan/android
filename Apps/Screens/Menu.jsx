@@ -46,7 +46,7 @@ const MenuItem = memo(({ item, itemCounts, incrementCount, decrementCount, index
 
   return (
     <View style={[styles.menuItem, index === totalItems - 1 && styles.lastMenuItem]}>
-     <Image source={{ uri: item.image_source }} style={styles.menuImage} />
+     <Image source={{  uri: 'http://10.0.2.2:3000/uploads/' + item.image_source }} style={styles.menuImage} />
       <View style={styles.menuDetailsContainer}>
         <View style={styles.menuDetails}>
           <Text style={styles.menuText}>{item.name}</Text>
