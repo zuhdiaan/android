@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import axios from 'axios';
 import { WebView } from 'react-native-webview';
 
@@ -31,7 +31,7 @@ export default function Payment({ route }) {
           quantity: itemCounts[item.id]
         }));
   
-      const response = await axios.post('http://10.0.2.2:3000/api/transaction', {
+      const response = await axios.post('http://10.0.2.2:3000/api/order', {
         orderId: `order-${Date.now()}`,
         grossAmount: formattedTotalPrice,
         customerDetails: {
