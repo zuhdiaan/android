@@ -7,6 +7,7 @@ export default function Payment({ route }) {
   const { itemCounts, menuItems } = route.params;
   const [totalPrice, setTotalPrice] = useState(0);
   const [transactionToken, setTransactionToken] = useState(null);
+  const [orderDate, setOrderDate] = useState('');
 
   useEffect(() => {
     let total = 0;
@@ -16,6 +17,11 @@ export default function Payment({ route }) {
     }
     setTotalPrice(isNaN(total) ? 0 : total);
   }, [itemCounts, menuItems]);
+
+  const formatDateToLocal = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
+  };
 
   const placeOrder = async () => {
     try {
@@ -41,6 +47,9 @@ export default function Payment({ route }) {
         },
         orderedItems
       });
+
+      const formattedOrderDate = formatDateToLocal(response.data.orderDate);
+      setOrderDate(formattedOrderDate);
       setTransactionToken(response.data.transactionToken);
     } catch (error) {
       console.error('Error placing order:', error);
@@ -98,6 +107,9 @@ export default function Payment({ route }) {
           <Text style={styles.buttonText}>Place Order</Text>
         </TouchableOpacity>
       </View>
+      {orderDate && (
+        <Text style={styles.orderDateText}>Order Date: {orderDate}</Text>
+      )}
     </View>
   );
 }
