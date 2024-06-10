@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View } from 'react-native';
 import Homepage from './Apps/Screens/Homepage';
+import QRScannerScreen from './Apps/Screens/QRScannerScreen';
 import Menu from './Apps/Screens/Menu';
 import Payment from './Apps/Screens/Payment';
 
@@ -15,6 +16,7 @@ export default function App() {
       <StatusBar style="auto" />
       <Stack.Navigator initialRouteName="Homepage">
         <Stack.Screen name="Homepage" component={Homepage} options={{ headerShown: false }} />
+        <Stack.Screen name="QRScannerScreen" component={QRScannerScreen} />
         <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }}/>
         <Stack.Screen name="Payment" component={Payment} options={{ title: "Order Summary", headerTitleAlign: 'center', headerTitleStyle: {fontSize: 24, color: '#FFFFFF', fontWeight: 'bold' }, headerStyle: { backgroundColor: "#19301B"}, headerTintColor: '#FFFFFF'}}/>
       </Stack.Navigator>
