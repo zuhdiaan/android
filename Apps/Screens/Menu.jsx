@@ -46,7 +46,7 @@ const MenuItem = memo(({ item, itemCounts, incrementCount, decrementCount, index
 
   return (
     <View style={[styles.menuItem, index === totalItems - 1 && styles.lastMenuItem]}>
-     <Image source={{  uri: 'http://10.0.2.2:3000/uploads/' + item.image_source }} style={styles.menuImage} />
+      <Image source={{ uri: 'http://10.0.2.2:3000/uploads/' + item.image_source }} style={styles.menuImage} />
       <View style={styles.menuDetailsContainer}>
         <View style={styles.menuDetails}>
           <Text style={styles.menuText}>{item.name}</Text>
@@ -58,15 +58,15 @@ const MenuItem = memo(({ item, itemCounts, incrementCount, decrementCount, index
               <Text style={styles.buttonText2}>+ Add</Text>
             </TouchableOpacity>
           ) : (
-        <View style={styles.addButtonContainer2}>
-          <TouchableOpacity style={styles.addButton2} onPress={() => decrementCount(item.id)}>
-            <Text style={styles.buttonText}>-</Text>
-          </TouchableOpacity>
-          <Text style={styles.buttonText}>{quantity}</Text>
-          <TouchableOpacity style={styles.addButton2} onPress={() => incrementCount(item.id)}>
-            <Text style={styles.buttonText}>+</Text>
-          </TouchableOpacity>
-        </View>
+            <View style={styles.addButtonContainer2}>
+              <TouchableOpacity style={styles.addButton2} onPress={() => decrementCount(item.id)}>
+                <Text style={styles.buttonText}>-</Text>
+              </TouchableOpacity>
+              <Text style={styles.buttonText}>{quantity}</Text>
+              <TouchableOpacity style={styles.addButton2} onPress={() => incrementCount(item.id)}>
+                <Text style={styles.buttonText}>+</Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
       </View>
@@ -102,7 +102,7 @@ export default function Menu({ navigation }) {
         }, {}));
       })
       .catch(error => console.error('Error fetching menu items:', error.message));
-  }, []);  
+  }, []);
 
   useEffect(() => {
     debouncedFilterItems(searchText, setFilteredItems);
@@ -148,29 +148,29 @@ export default function Menu({ navigation }) {
         ))}
       </View>
       <ScrollView style={styles.menuContainer}>
-      {filteredItems.length === 0 ? (
-  <Text style={styles.noItems}>No items found</Text>
-) : (
-  filteredItems.map((item, index) => (
-    <MenuItem
-      key={item.id}
-      item={item}
-      itemCounts={itemCounts}
-      incrementCount={incrementCount}
-      decrementCount={decrementCount}
-      index={index}
-      totalItems={filteredItems.length}
-    />
-  ))
-)}
-</ScrollView>
-<View style={styles.paymentContainer}>
-<TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts, menuItems })}>
-<Text style={styles.buttonText3}>Choose Payment Method</Text>
-</TouchableOpacity>
-</View>
-</View>
-);
+        {filteredItems.length === 0 ? (
+          <Text style={styles.noItems}>No items found</Text>
+        ) : (
+          filteredItems.map((item, index) => (
+            <MenuItem
+              key={item.id}
+              item={item}
+              itemCounts={itemCounts}
+              incrementCount={incrementCount}
+              decrementCount={decrementCount}
+              index={index}
+              totalItems={filteredItems.length}
+            />
+          ))
+        )}
+      </ScrollView>
+      <View style={styles.paymentContainer}>
+        <TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts, menuItems })}>
+          <Text style={styles.buttonText3}>Choose Payment Method</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: 10,
-    marginLeft: 30,  
+    marginLeft: 30,
   },
   title: {
     fontSize: 18,
@@ -276,67 +276,62 @@ const styles = StyleSheet.create({
     backgroundColor: '#96A197',
     borderRadius: 30,
     alignItems: 'center',
-    marginTop: 10,
     flexDirection: 'row',
-    marginLeft: 30,
-    marginTop: 10,
+    justifyContent: 'space-between',
+    width: 120,
   },
   addButton: {
     backgroundColor: '#96A197',
     borderRadius: 30,
-    paddingVertical: 5,
-    paddingHorizontal: 20,
+    alignItems: 'center',
     flexDirection: 'row',
-    marginLeft: 30,
-    marginTop: 10,
+    justifyContent: 'space-between',
+    width: 100,
+    height: 45,
   },
-    addButton2: {
-    backgroundColor: '#96A197',
-    borderRadius: 30,
-    paddingVertical: 5,
-    paddingHorizontal: 15,
-    flexDirection: 'row',
+  addButton2: {
+    width: 40,
+    alignItems: 'center',
   },
   buttonText: {
     color: '#19301B',
     fontSize: 18,
-    textAlign: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
   buttonText2: {
     color: '#19301B',
-    fontSize: 18,
+    fontSize: 16,
+    width: '100%',
     textAlign: 'center',
   },
   buttonText3: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 18,
-    textAlign: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
-  paymentButton: {
-    backgroundColor: '#19301B',
-    borderRadius: 30,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    width: '90%',
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
+  noItems: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 18,
   },
   paymentContainer: {
     position: 'absolute',
-    backgroundColor: '#FFFFFF',
-    padding: 20,
-    width: 410,
-    alignSelf: 'center',
-    borderTopStartRadius: 50,
-    borderTopEndRadius: 50,
-    marginTop: 790,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#96A197',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
-  noItems: {
-    fontSize: 20,
-    fontWeight: '200',
-    color: '#FFFFFF',
-    textAlign: "center",
-    marginTop: 250,
+  paymentButton: {
+    backgroundColor: '#96A197',
+    borderRadius: 30,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    height: 45,
   },
 });
