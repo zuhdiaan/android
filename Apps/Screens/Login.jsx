@@ -10,13 +10,11 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://10.0.2.2:3000/api/login', {
-        username,
-        password,
-      });
+      const response = await axios.post('http://10.0.2.2:3000/api/login', { username, password });
       if (response.data.success) {
         Alert.alert('Success', 'Login successful');
-        navigation.navigate('Menu');
+        const { userId, name, balance } = response.data;
+        navigation.navigate('Dashboard', { userId, name, balance });
       } else {
         Alert.alert('Error', response.data.message);
       }
@@ -36,7 +34,6 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.logo}>Your Logo</Text>
       <View style={styles.inputView}>
         <TextInput
           style={styles.inputText}

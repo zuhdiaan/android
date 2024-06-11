@@ -9,6 +9,7 @@ import Payment from './Apps/Screens/Payment';
 import Login from './Apps/Screens/Login';
 import Register from './Apps/Screens/Register';
 import ForgotPassword from './Apps/Screens/ForgotPassword';
+import Dashboard from './Apps/Screens/Dashboard';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ export default function App() {
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{ headerShown: false }} />
+        <Stack.Screen name="Dashboard" component={Dashboard} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

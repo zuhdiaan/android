@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import axios from 'axios';
 import { WebView } from 'react-native-webview';
 
 export default function Payment({ route }) {
-  const { itemCounts, menuItems } = route.params;
+  const { itemCounts, menuItems, userId, balance } = route.params;
   const [totalPrice, setTotalPrice] = useState(0);
   const [transactionToken, setTransactionToken] = useState(null);
   const [orderDate, setOrderDate] = useState('');
@@ -18,11 +18,6 @@ export default function Payment({ route }) {
     setTotalPrice(isNaN(total) ? 0 : total);
   }, [itemCounts, menuItems]);
 
-  const formatDateToLocal = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
-  };
-
   const placeOrder = async () => {
     try {
       const formattedTotalPrice = totalPrice.toFixed(2);
@@ -30,13 +25,16 @@ export default function Payment({ route }) {
   
       const orderedItems = menuItems
         .filter(item => itemCounts[item.id] > 0)
-        .map(item => ({
-          id: item.id,
-          name: item.name,
-          price: parseFloat(item.price),
-          quantity: itemCounts[item.id]
-        }));
-  
+        .map(item => ({ itemId: item.id, quantity: itemCounts[item.id] }));
+
+      const orderData = {
+        userId,
+        items: orderedItems,
+        totalPrice,
+        transactionToken,
+        orderDate: new Date().toISOString()
+      };
+
       const response = await axios.post('http://10.0.2.2:3000/api/order', {
         orderId: `order-${Date.now()}`,
         grossAmount: formattedTotalPrice,
@@ -48,11 +46,12 @@ export default function Payment({ route }) {
         orderedItems
       });
 
-      const formattedOrderDate = formatDateToLocal(response.data.orderDate);
+      const formattedOrderDate = formatDateToLocal(response.data.orderDate); // Implement formatDateToLocal function or remove this line if not needed
       setOrderDate(formattedOrderDate);
       setTransactionToken(response.data.transactionToken);
     } catch (error) {
       console.error('Error placing order:', error);
+      Alert.alert('Error', 'Failed to place order');
     }
   };
 
@@ -80,10 +79,10 @@ export default function Payment({ route }) {
             const itemTotalPrice = itemPrice * (itemCounts[item.id] || 0);
             return (
               <View key={item.id} style={styles.item}>
-                  <View style={styles.itemInfo}>
-                <Text style={styles.itemText}>{item.name}</Text>
-                <Text style={styles.itemText}>{`Rp. ${item.price} x ${quantity}`}</Text>
-                  </View>
+                <View style={styles.itemInfo}>
+                  <Text style={styles.itemText}>{item.name}</Text>
+                  <Text style={styles.itemText}>{`Rp. ${item.price} x ${quantity}`}</Text>
+                </View>
                 <Text style={styles.itemText2}>{`Rp. ${itemTotalPrice.toLocaleString('id-ID')}`}</Text>
               </View>
             );
@@ -92,16 +91,8 @@ export default function Payment({ route }) {
         })}
       </ScrollView>
       <View style={styles.totalContainer}>
-      <Text style={styles.total}>Total: Rp. {totalPrice.toLocaleString('id-ID')}</Text>
+        <Text style={styles.total}>Total: Rp. {totalPrice.toLocaleString('id-ID')}</Text>
       </View>
-        {/* <TouchableOpacity style={styles.methodeContainer} onPress={() => console.log('click2')}> */}
-        {/* <View style={styles.methodeTextContainer}>
-            <Text style={styles.methodeText}>Payment Methods</Text>
-            <View style={styles.methodeText2Container}>
-            <Text style={styles.methodeText2}>...</Text>
-            </View> */}
-        {/* </View> */}
-        {/* </TouchableOpacity> */}
       <View style={styles.paymentContainer}>
         <TouchableOpacity style={styles.paymentButton} onPress={placeOrder}>
           <Text style={styles.buttonText}>Place Order</Text>
