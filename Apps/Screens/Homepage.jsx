@@ -1,13 +1,13 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import { useNavigation } from "@react-navigation/native"
 import React from 'react'
-import Menu from './Menu'
+import Login from './Login'
 
 export default function Homepage() {
   const navigation = useNavigation()
 
   const goToNextScreen = () => {
-    navigation.navigate(Menu)
+    navigation.navigate(Login)
   }
 
   return (
