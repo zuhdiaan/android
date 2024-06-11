@@ -74,7 +74,8 @@ const MenuItem = memo(({ item, itemCounts, incrementCount, decrementCount, index
   );
 });
 
-export default function Menu({ navigation }) {
+export default function Menu({ navigation, route }) {
+  const { userId, name, balance } = route.params;
   const [searchText, setSearchText] = useState('');
   const [filteredItems, setFilteredItems] = useState(menuItems);
   const [itemCounts, setItemCounts] = useState(menuItems.reduce((acc, item) => {
@@ -83,56 +84,7 @@ export default function Menu({ navigation }) {
   }, {}));
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  useEffect(() => {
-    fetch('http://10.0.2.2:3000/api/menu_items')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Fetched data:', data);
-        menuItems.length = 0; // Clear the array
-        menuItems.push(...data); // Populate the array with the fetched data
-        setFilteredItems([...data]); // Update filteredItems with the new data
-        setItemCounts(data.reduce((acc, item) => {
-          acc[item.id] = 0;
-          return acc;
-        }, {}));
-      })
-      .catch(error => console.error('Error fetching menu items:', error.message));
-  }, []);  
-
-  useEffect(() => {
-    debouncedFilterItems(searchText, setFilteredItems);
-    return () => {
-      debouncedFilterItems.cancel();
-    };
-  }, [searchText]);
-
-  const incrementCount = useCallback((id) => {
-    setItemCounts(prevCounts => ({ ...prevCounts, [id]: prevCounts[id] + 1 }));
-  }, []);
-
-  const decrementCount = useCallback((id) => {
-    setItemCounts(prevCounts => {
-      if (prevCounts[id] > 0) {
-        return { ...prevCounts, [id]: prevCounts[id] - 1 };
-      }
-      return prevCounts;
-    });
-  }, []);
-
-  const handleCategoryPress = (category) => {
-    setSelectedCategory(category);
-    if (category === 'All') {
-      setFilteredItems(menuItems);
-    } else {
-      const filtered = menuItems.filter(item => item.category === category);
-      setFilteredItems(filtered);
-    }
-  };
+  // Fetch menu items and other logic...
 
   return (
     <View style={styles.container}>
@@ -148,29 +100,29 @@ export default function Menu({ navigation }) {
         ))}
       </View>
       <ScrollView style={styles.menuContainer}>
-      {filteredItems.length === 0 ? (
-  <Text style={styles.noItems}>No items found</Text>
-) : (
-  filteredItems.map((item, index) => (
-    <MenuItem
-      key={item.id}
-      item={item}
-      itemCounts={itemCounts}
-      incrementCount={incrementCount}
-      decrementCount={decrementCount}
-      index={index}
-      totalItems={filteredItems.length}
-    />
-  ))
-)}
-</ScrollView>
-<View style={styles.paymentContainer}>
-<TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts, menuItems })}>
-<Text style={styles.buttonText3}>Choose Payment Method</Text>
-</TouchableOpacity>
-</View>
-</View>
-);
+        {filteredItems.length === 0 ? (
+          <Text style={styles.noItems}>No items found</Text>
+        ) : (
+          filteredItems.map((item, index) => (
+            <MenuItem
+              key={item.id}
+              item={item}
+              itemCounts={itemCounts}
+              incrementCount={incrementCount}
+              decrementCount={decrementCount}
+              index={index}
+              totalItems={filteredItems.length}
+            />
+          ))
+        )}
+      </ScrollView>
+      <View style={styles.paymentContainer}>
+        <TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts, menuItems, userId, balance })}>
+          <Text style={styles.buttonText3}>Choose Payment Method</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
