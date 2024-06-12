@@ -84,7 +84,56 @@ export default function Menu({ navigation, route }) {
   }, {}));
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Fetch menu items and other logic...
+  useEffect(() => {
+    fetch('http://10.0.2.2:3000/api/menu_items')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Fetched data:', data);
+        menuItems.length = 0; // Clear the array
+        menuItems.push(...data); // Populate the array with the fetched data
+        setFilteredItems([...data]); // Update filteredItems with the new data
+        setItemCounts(data.reduce((acc, item) => {
+          acc[item.id] = 0;
+          return acc;
+        }, {}));
+      })
+      .catch(error => console.error('Error fetching menu items:', error.message));
+  }, []);  
+
+  useEffect(() => {
+    debouncedFilterItems(searchText, setFilteredItems);
+    return () => {
+      debouncedFilterItems.cancel();
+    };
+  }, [searchText]);
+
+  const incrementCount = useCallback((id) => {
+    setItemCounts(prevCounts => ({ ...prevCounts, [id]: prevCounts[id] + 1 }));
+  }, []);
+
+  const decrementCount = useCallback((id) => {
+    setItemCounts(prevCounts => {
+      if (prevCounts[id] > 0) {
+        return { ...prevCounts, [id]: prevCounts[id] - 1 };
+      }
+      return prevCounts;
+    });
+  }, []);
+
+  const handleCategoryPress = (category) => {
+    setSelectedCategory(category);
+    if (category === 'All') {
+      setFilteredItems(menuItems);
+    } else {
+      const filtered = menuItems.filter(item => item.category === category);
+      setFilteredItems(filtered);
+    }
+  };
 
   return (
     <View style={styles.container}>
