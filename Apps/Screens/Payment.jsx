@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import axios from 'axios';
-import { WebView } from 'react-native-webview';
+import moment from 'moment';
 
 export default function Payment({ route }) {
   const { itemCounts, menuItems, userId, balance } = route.params;
   const [totalPrice, setTotalPrice] = useState(0);
-  const [transactionToken, setTransactionToken] = useState(null);
   const [orderDate, setOrderDate] = useState('');
 
   useEffect(() => {
@@ -20,53 +19,62 @@ export default function Payment({ route }) {
 
   const placeOrder = async () => {
     try {
-      const formattedTotalPrice = totalPrice.toFixed(2);
-      console.log('Formatted Total Price:', formattedTotalPrice);
+      // Check if the user's balance is sufficient
+      if (balance < totalPrice) {
+        Alert.alert('Error', 'Insufficient balance');
+        return;
+      }
   
-      const orderedItems = menuItems
-        .filter(item => itemCounts[item.id] > 0)
-        .map(item => ({ itemId: item.id, quantity: itemCounts[item.id] }));
+      // Generate the order ID with the format ORDATE-1, ORDATE-2, and so on
+      const currentDate = moment().format('DDMMYY');
+      const orderId = `OR${currentDate}`;
+    // Send the order details to your backend
+    const orderedItems = menuItems
+      .filter(item => itemCounts[item.id] > 0)
+      .map(item => ({
+        item_id: item.id,
+        item_name: item.name,
+        quantity: itemCounts[item.id],
+        item_price: parseFloat(item.price),
+        total_price: parseFloat(item.price) * itemCounts[item.id]
+      }));
 
-      const orderData = {
-        userId,
-        items: orderedItems,
-        totalPrice,
-        transactionToken,
-        orderDate: new Date().toISOString()
-      };
+    const orderData = {
+      orderId,
+      orderDate: new Date().toISOString(),
+      orderedItems,
+    };
 
-      const response = await axios.post('http://10.0.2.2:3000/api/order', {
-        orderId: `order-${Date.now()}`,
-        grossAmount: formattedTotalPrice,
-        customerDetails: {
-          first_name: 'Customer',
-          email: 'customer@example.com',
-          phone: '08123456789'
-        },
-        orderedItems
-      });
+    console.log('Order Data:', orderData);
 
-      const formattedOrderDate = formatDateToLocal(response.data.orderDate); // Implement formatDateToLocal function or remove this line if not needed
-      setOrderDate(formattedOrderDate);
-      setTransactionToken(response.data.transactionToken);
-    } catch (error) {
-      console.error('Error placing order:', error);
+    const orderResponse = await axios.post('http://10.0.2.2:3000/api/order', orderData);
+
+    console.log('Order Response:', orderResponse.data);
+
+    // Handle the responses from your backend
+    if (orderResponse.status === 200) {
+      // Deduct the total price from the user's balance
+      const newBalance = balance - totalPrice;
+
+      // Update the user's balance in your backend
+      const balanceResponse = await axios.post('http://10.0.2.2:3000/api/updateBalance', { userId, newBalance });
+
+      console.log('Balance Response:', balanceResponse.data);
+
+      if (balanceResponse.status === 200) {
+        setOrderDate(new Date().toLocaleString());
+        Alert.alert('Success', 'Order placed successfully');
+      } else {
+        Alert.alert('Error', 'Failed to update balance');
+      }
+    } else {
       Alert.alert('Error', 'Failed to place order');
     }
-  };
-
-  if (transactionToken) {
-    return (
-      <WebView
-        source={{ uri: `https://app.sandbox.midtrans.com/snap/v2/vtweb/${transactionToken}` }}
-        onNavigationStateChange={(state) => {
-          if (state.url.includes('transaction_status')) {
-            // Handle the payment status
-          }
-        }}
-      />
-    );
+  } catch (error) {
+    console.error('Error placing order:', error);
+    Alert.alert('Error', 'Failed to place order');
   }
+};
 
   return (
     <View style={styles.container}>
@@ -98,9 +106,6 @@ export default function Payment({ route }) {
           <Text style={styles.buttonText}>Place Order</Text>
         </TouchableOpacity>
       </View>
-      {orderDate && (
-        <Text style={styles.orderDateText}>Order Date: {orderDate}</Text>
-      )}
     </View>
   );
 }
