@@ -6,7 +6,7 @@ import moment from 'moment';
 export default function Payment({ route }) {
   const { itemCounts, menuItems, userId, balance } = route.params;
   const [totalPrice, setTotalPrice] = useState(0);
-  const [orderDate, setOrderDate] = useState('');
+  const [orderTime, setOrderTime] = useState('');
 
   useEffect(() => {
     let total = 0;
@@ -16,6 +16,10 @@ export default function Payment({ route }) {
     }
     setTotalPrice(isNaN(total) ? 0 : total);
   }, [itemCounts, menuItems]);
+
+  useEffect(() => {
+    setOrderTime(moment().format('HH-mm-ss'));
+  }, []);
 
   const placeOrder = async () => {
     try {
@@ -62,7 +66,7 @@ export default function Payment({ route }) {
       console.log('Balance Response:', balanceResponse.data);
 
       if (balanceResponse.status === 200) {
-        setOrderDate(new Date().toLocaleString());
+        setOrderTime(new Date().toLocaleString());
         Alert.alert('Success', 'Order placed successfully');
       } else {
         Alert.alert('Error', 'Failed to update balance');
@@ -76,38 +80,38 @@ export default function Payment({ route }) {
   }
 };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Items</Text>
-      <ScrollView style={styles.itemList}>
-        {menuItems.map((item) => {
-          const quantity = itemCounts[item.id] || 0;
-          if (quantity > 0) {
-            const itemPrice = parseFloat(item.price);
-            const itemTotalPrice = itemPrice * (itemCounts[item.id] || 0);
-            return (
-              <View key={item.id} style={styles.item}>
-                <View style={styles.itemInfo}>
-                  <Text style={styles.itemText}>{item.name}</Text>
-                  <Text style={styles.itemText}>{`Rp. ${item.price} x ${quantity}`}</Text>
-                </View>
-                <Text style={styles.itemText2}>{`Rp. ${itemTotalPrice.toLocaleString('id-ID')}`}</Text>
+return (
+  <View style={styles.container}>
+    <Text style={styles.title}>Items</Text>
+    <ScrollView style={styles.itemList}>
+      {menuItems.map((item) => {
+        const quantity = itemCounts[item.id] || 0;
+        if (quantity > 0) {
+          const itemPrice = parseFloat(item.price);
+          const itemTotalPrice = itemPrice * (itemCounts[item.id] || 0);
+          return (
+            <View key={item.id} style={styles.item}>
+              <View style={styles.itemInfo}>
+                <Text style={styles.itemText}>{item.name}</Text>
+                <Text style={styles.itemText}>{`Rp. ${item.price} x ${quantity}`}</Text>
               </View>
-            );
-          }
-          return null;
-        })}
-      </ScrollView>
-      <View style={styles.totalContainer}>
-        <Text style={styles.total}>Total: Rp. {totalPrice.toLocaleString('id-ID')}</Text>
-      </View>
-      <View style={styles.paymentContainer}>
-        <TouchableOpacity style={styles.paymentButton} onPress={placeOrder}>
-          <Text style={styles.buttonText}>Place Order</Text>
-        </TouchableOpacity>
-      </View>
+              <Text style={styles.itemText2}>{`Rp. ${itemTotalPrice.toLocaleString('id-ID')}`}</Text>
+            </View>
+          );
+        }
+        return null;
+      })}
+    </ScrollView>
+    <View style={styles.totalContainer}>
+      <Text style={styles.total}>Total: Rp. {totalPrice.toLocaleString('id-ID')}</Text>
     </View>
-  );
+    <View style={styles.paymentContainer}>
+      <TouchableOpacity style={styles.paymentButton} onPress={placeOrder}>
+        <Text style={styles.buttonText}>Place Order</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+);
 }
 
 const styles = StyleSheet.create({
