@@ -166,7 +166,7 @@ export default function Menu({ navigation, route }) {
         )}
       </ScrollView>
       <View style={styles.paymentContainer}>
-        <TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts, menuItems, userId, balance })}>
+        <TouchableOpacity style={styles.paymentButton} onPress={() => navigation.navigate('Payment', { itemCounts, menuItems, userId, name, balance })}>
           <Text style={styles.buttonText3}>Choose Payment Method</Text>
         </TouchableOpacity>
       </View>

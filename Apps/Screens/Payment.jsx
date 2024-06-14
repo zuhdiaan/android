@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'rea
 import axios from 'axios';
 import moment from 'moment';
 
-export default function Payment({ route }) {
-  const { itemCounts, menuItems, userId, balance } = route.params;
+export default function Payment({ navigation, route }) {
+  const { itemCounts, menuItems, userId, name, balance } = route.params;
   const [totalPrice, setTotalPrice] = useState(0);
   const [orderTime, setOrderTime] = useState('');
 
@@ -67,7 +67,12 @@ export default function Payment({ route }) {
 
       if (balanceResponse.status === 200) {
         setOrderTime(new Date().toLocaleString());
-        Alert.alert('Success', 'Order placed successfully');
+        Alert.alert('Success', 'Order placed successfully', [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('PaymentSuccess', { userId, name, balance })
+          },
+        ]);
       } else {
         Alert.alert('Error', 'Failed to update balance');
       }
