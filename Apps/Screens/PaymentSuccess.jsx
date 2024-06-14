@@ -1,15 +1,43 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useCallback, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 
 const PaymentSuccess = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { userId, name, balance } = route.params;
+  const [userBalance, setUserBalance] = useState(balance);
+
+  const fetchUpdatedBalance = async (userId) => {
+    try {
+      const response = await fetch(`http://10.0.2.2:3000/api/balance?userId=${userId}`);
+      const data = await response.json();
+      if (response.ok) {
+        setUserBalance(data.balance);
+        return data.balance;
+      } else {
+        Alert.alert('Error', data.error || 'Failed to fetch balance');
+      }
+    } catch (error) {
+      console.error('Error fetching balance:', error);
+      Alert.alert('Error', 'Failed to fetch balance');
+    }
+  };
 
   const handleBackToDashboard = () => {
-    navigation.navigate('Dashboard', { userId, name, balance });
+    navigation.navigate('Dashboard', { userId, name, balance: userBalance });
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchBalance = async () => {
+        const updatedBalance = await fetchUpdatedBalance(userId);
+        route.params.balance = updatedBalance;
+      };
+
+      fetchBalance();
+    }, [userId])
+  );
 
   return (
     <View style={styles.container}>
