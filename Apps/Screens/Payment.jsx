@@ -32,91 +32,94 @@ export default function Payment({ navigation, route }) {
       // Generate the order ID with the format ORDATE-1, ORDATE-2, and so on
       const currentDate = moment().format('DDMMYY');
       const orderId = `OR${currentDate}`;
-    // Send the order details to your backend
-    const orderedItems = menuItems
-      .filter(item => itemCounts[item.id] > 0)
-      .map(item => ({
-        item_id: item.id,
-        item_name: item.name,
-        quantity: itemCounts[item.id],
-        item_price: parseFloat(item.price),
-        total_price: parseFloat(item.price) * itemCounts[item.id]
-      }));
+  
+      // Send the order details to your backend
+      const orderedItems = menuItems
+        .filter(item => itemCounts[item.id] > 0)
+        .map(item => ({
+          item_id: item.id,
+          item_name: item.name,
+          quantity: itemCounts[item.id],
+          item_price: parseFloat(item.price),
+          total_price: parseFloat(item.price) * itemCounts[item.id]
+        }));
 
-    const orderData = {
-      orderId,
-      orderDate: new Date().toISOString(),
-      orderedItems,
-    };
+      const orderData = {
+        orderId,
+        orderDate: new Date().toISOString(),
+        orderedItems,
+        userId,
+        name // Include the user's name
+      };
 
-    console.log('Order Data:', orderData);
+      console.log('Order Data:', orderData);
 
-    const orderResponse = await axios.post('http://10.0.2.2:3000/api/order', orderData);
+      const orderResponse = await axios.post('http://10.0.2.2:3000/api/order', orderData);
 
-    console.log('Order Response:', orderResponse.data);
+      console.log('Order Response:', orderResponse.data);
 
-    // Handle the responses from your backend
-    if (orderResponse.status === 200) {
-      // Deduct the total price from the user's balance
-      const newBalance = balance - totalPrice;
+      // Handle the responses from your backend
+      if (orderResponse.status === 200) {
+        // Deduct the total price from the user's balance
+        const newBalance = balance - totalPrice;
 
-      // Update the user's balance in your backend
-      const balanceResponse = await axios.post('http://10.0.2.2:3000/api/updateBalance', { userId, newBalance });
+        // Update the user's balance in your backend
+        const balanceResponse = await axios.post('http://10.0.2.2:3000/api/updateBalance', { userId, newBalance });
 
-      console.log('Balance Response:', balanceResponse.data);
+        console.log('Balance Response:', balanceResponse.data);
 
-      if (balanceResponse.status === 200) {
-        setOrderTime(new Date().toLocaleString());
-        Alert.alert('Success', 'Order placed successfully', [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('PaymentSuccess', { userId, name, balance })
-          },
-        ]);
+        if (balanceResponse.status === 200) {
+          setOrderTime(new Date().toLocaleString());
+          Alert.alert('Success', 'Order placed successfully', [
+            {
+              text: 'OK',
+              onPress: () => navigation.navigate('PaymentSuccess', { userId, name, balance })
+            },
+          ]);
+        } else {
+          Alert.alert('Error', 'Failed to update balance');
+        }
       } else {
-        Alert.alert('Error', 'Failed to update balance');
+        Alert.alert('Error', 'Failed to place order');
       }
-    } else {
+    } catch (error) {
+      console.error('Error placing order:', error);
       Alert.alert('Error', 'Failed to place order');
     }
-  } catch (error) {
-    console.error('Error placing order:', error);
-    Alert.alert('Error', 'Failed to place order');
-  }
-};
+  };
 
-return (
-  <View style={styles.container}>
-    <Text style={styles.title}>Items</Text>
-    <ScrollView style={styles.itemList}>
-      {menuItems.map((item) => {
-        const quantity = itemCounts[item.id] || 0;
-        if (quantity > 0) {
-          const itemPrice = parseFloat(item.price);
-          const itemTotalPrice = itemPrice * (itemCounts[item.id] || 0);
-          return (
-            <View key={item.id} style={styles.item}>
-              <View style={styles.itemInfo}>
-                <Text style={styles.itemText}>{item.name}</Text>
-                <Text style={styles.itemText}>{`Rp. ${item.price} x ${quantity}`}</Text>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Items</Text>
+      <ScrollView style={styles.itemList}>
+        {menuItems.map((item) => {
+          const quantity = itemCounts[item.id] || 0;
+          if (quantity > 0) {
+            const itemPrice = parseFloat(item.price);
+            const itemTotalPrice = itemPrice * (itemCounts[item.id] || 0);
+            return (
+              <View key={item.id} style={styles.item}>
+                <View style={styles.itemInfo}>
+                  <Text style={styles.itemText}>{item.name}</Text>
+                  <Text style={styles.itemText}>{`Rp. ${item.price} x ${quantity}`}</Text>
+                </View>
+                <Text style={styles.itemText2}>{`Rp. ${itemTotalPrice.toLocaleString('id-ID')}`}</Text>
               </View>
-              <Text style={styles.itemText2}>{`Rp. ${itemTotalPrice.toLocaleString('id-ID')}`}</Text>
-            </View>
-          );
-        }
-        return null;
-      })}
-    </ScrollView>
-    <View style={styles.totalContainer}>
-      <Text style={styles.total}>Total: Rp. {totalPrice.toLocaleString('id-ID')}</Text>
+            );
+          }
+          return null;
+        })}
+      </ScrollView>
+      <View style={styles.totalContainer}>
+        <Text style={styles.total}>Total: Rp. {totalPrice.toLocaleString('id-ID')}</Text>
+      </View>
+      <View style={styles.paymentContainer}>
+        <TouchableOpacity style={styles.paymentButton} onPress={placeOrder}>
+          <Text style={styles.buttonText}>Place Order</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-    <View style={styles.paymentContainer}>
-      <TouchableOpacity style={styles.paymentButton} onPress={placeOrder}>
-        <Text style={styles.buttonText}>Place Order</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-);
+  );
 }
 
 const styles = StyleSheet.create({
