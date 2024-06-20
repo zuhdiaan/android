@@ -41,10 +41,10 @@ const PaymentSuccess = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.successText}>Pembayaran Berhasil!</Text>
-      <Text style={styles.messageText}>Terima kasih telah melakukan pembayaran.</Text>
+      <Text style={styles.successText}>Payment Success!</Text>
+      <Text style={styles.messageText}>Thanks for the Payment, Please wait for your order to arrive!</Text>
       <TouchableOpacity style={styles.button} onPress={handleBackToDashboard}>
-        <Text style={styles.buttonText}>Kembali ke Dashboard</Text>
+        <Text style={styles.buttonText}>Back To Dashboard</Text>
       </TouchableOpacity>
     </View>
   );
@@ -55,33 +55,32 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#19301B', // Green background color
     padding: 16,
   },
   successText: {
-    fontSize: 24,
+    fontSize: 36,
     fontWeight: 'bold',
-    color: '#4CAF50',
+    color: '#ffffff', // White color
     marginBottom: 16,
   },
   messageText: {
-    fontSize: 16,
-    color: '#666',
+    fontSize: 12,
+    color: '#838383', // 838383 color
     marginBottom: 32,
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#ffffff', // 19301B background color
     paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
+    paddingHorizontal: 100,
+    borderRadius: 40,
   },
   buttonText: {
     fontSize: 16,
-    color: '#fff',
+    color: '#19301B', // White color
     textAlign: 'center',
   },
 });
 
 export default PaymentSuccess;
- 

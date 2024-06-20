@@ -25,13 +25,13 @@ export default function Dashboard({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Hello, {name}!</Text>
-      <Text style={styles.balanceText}>Your Balance: {userBalance}</Text>
-      <TouchableOpacity style={styles.topUpBtn} onPress={() => Alert.alert('Alert', 'Please top up at the cashier')}>
-        <Text style={styles.topUpText}>Top Up</Text>
-      </TouchableOpacity>
+      <View style={styles.textContainer}>
+        <Text style={styles.welcomeText}>Welcome, {name}!</Text>
+        <Text style={styles.balanceText}>Your Balance is <Text style={styles.balanceAmount}>{userBalance}</Text></Text>
+        <Text style={styles.topUpText}>Please top up at the cashier</Text>
+      </View>
       <TouchableOpacity style={styles.menuBtn} onPress={() => navigation.navigate('Menu', { userId, name, balance: userBalance })}>
-        <Text style={styles.menuText}>Go to Menu</Text>
+        <Text style={styles.menuText}>Scan QR Code</Text>
       </TouchableOpacity>
     </View>
   );
@@ -40,45 +40,47 @@ export default function Dashboard({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ffffff',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    backgroundColor: '#19301B',
+    padding: 20,
+  },
+  textContainer: {
+    alignItems: 'flex-start',
   },
   welcomeText: {
+    marginTop: 30,
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: '#ffffff',
+    marginBottom: 10,
   },
   balanceText: {
     fontSize: 20,
-    marginBottom: 20,
+    color: '#838383',
   },
-  topUpBtn: {
-    width: '80%',
-    height: 50,
-    backgroundColor: '#19301B',
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
+  balanceAmount: {
+    color: '#838383',
+    fontWeight: 'bold',
   },
   topUpText: {
-    color: '#ffffff',
-    fontWeight: 'bold',
-    fontSize: 16,
+    color: '#838383',
+    marginBottom: 20,
   },
   menuBtn: {
+    position: 'absolute',
+    top: '50%',
+    left: '15%',
     width: '80%',
     height: 50,
-    backgroundColor: '#19301B',
-    borderRadius: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
   },
   menuText: {
-    color: '#ffffff',
+    color: '#19301B',
     fontWeight: 'bold',
     fontSize: 16,
-  },
+  },  
 });
