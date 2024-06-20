@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Alert, Keyboard, Platform } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [keyboardIsShown, setKeyboardIsShown] = useState(false);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardIsShown(true);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardIsShown(false);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -33,87 +49,121 @@ export default function Login() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder="Username"
-          placeholderTextColor="#003f5c"
-          autoCapitalize="none"
-          value={username}
-          onChangeText={text => setUsername(text)}
-        />
+    <KeyboardAwareScrollView
+      contentContainerStyle={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      extraScrollHeight={keyboardIsShown ? 100 : 0}
+      enableOnAndroid={true}
+    >
+      <Image source={require("./../../assets/images/homepage.jpg")} style={styles.image} />
+      <View style={styles.contentContainer}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Username</Text>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              autoCapitalize="none"
+              value={username}
+              onChangeText={text => setUsername(text)}
+            />
+          </View>
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Password</Text>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              secureTextEntry={true}
+              value={password}
+              onChangeText={text => setPassword(text)}
+            />
+          </View>
+        </View>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>LOGIN</Text>
+        </TouchableOpacity>
+        <View style={styles.registerContainer}>
+          <Text style={styles.registerPrompt}>Don't have an account?</Text>
+          <TouchableOpacity onPress={handleRegister}>
+            <Text style={styles.registerText}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder="Password"
-          placeholderTextColor="#003f5c"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={text => setPassword(text)}
-        />
-      </View>
-      <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-        <Text style={styles.loginText}>LOGIN</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleRegister}>
-        <Text style={styles.registerText}>Register</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleForgotPassword}>
-        <Text style={styles.forgotText}>Forgot Password?</Text>
-      </TouchableOpacity>
-    </View>
+    </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexGrow: 1,
+    backgroundColor: '#19301B',
   },
-  logo: {
-    fontWeight: 'bold',
-    fontSize: 50,
+  image: {
+    width: '100%',
+    height: 600,
+    resizeMode: 'cover',
+  },
+  contentContainer: {
+    padding: 30,
+    backgroundColor: 'white',
+    marginTop: -25,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingBottom: 100,
+  },
+  inputContainer: {
+    width: '100%',
+    marginBottom: 5,
+  },
+  label: {
+    fontSize: 20,
+    fontWeight: '700',
     color: '#19301B',
-    marginBottom: 40,
+    marginBottom: 5,
   },
   inputView: {
-    width: '80%',
-    backgroundColor: '#f2f2f2',
+    width: '100%',
+    backgroundColor: '#D9D9D9',
     borderRadius: 25,
-    height: 50,
-    marginBottom: 20,
+    height: 45,
     justifyContent: 'center',
-    padding: 20,
+    paddingHorizontal: 10,
   },
   inputText: {
-    height: 50,
+    height: 45,
     color: '#19301B',
+  },
+  button: {
+    backgroundColor: '#19301B',
+    padding: 12,
+    borderRadius: 25,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 18,
   },
   forgotText: {
     color: '#19301B',
     fontSize: 12,
     marginTop: 10,
+    textAlign: 'center',
+  },
+  registerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    justifyContent: 'center',
+  },
+  registerPrompt: {
+    color: '#19301B',
+    fontSize: 14,
   },
   registerText: {
     color: '#19301B',
-    fontSize: 12,
-    marginTop: 10,
-  },
-  loginBtn: {
-    width: '80%',
-    backgroundColor: '#19301B',
-    borderRadius: 25,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 40,
-    marginBottom: 10,
-  },
-  loginText: {
-    color: 'white',
+    fontSize: 16,
+    marginLeft: 5,
+    textDecorationLine: 'underline',
   },
 });
