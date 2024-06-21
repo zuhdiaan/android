@@ -44,10 +44,6 @@ export default function Login() {
     navigation.navigate('Register');
   };
 
-  const handleForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
-  };
-
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={styles.container}

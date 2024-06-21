@@ -55,30 +55,30 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#19301B', // Green background color
+    backgroundColor: '#19301B',
     padding: 16,
   },
   successText: {
     fontSize: 36,
     fontWeight: 'bold',
-    color: '#ffffff', // White color
+    color: '#ffffff',
     marginBottom: 16,
   },
   messageText: {
     fontSize: 12,
-    color: '#838383', // 838383 color
+    color: '#838383',
     marginBottom: 32,
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#ffffff', // 19301B background color
+    backgroundColor: '#ffffff',
     paddingVertical: 12,
     paddingHorizontal: 100,
     borderRadius: 40,
   },
   buttonText: {
     fontSize: 16,
-    color: '#19301B', // White color
+    color: '#19301B',
     textAlign: 'center',
   },
 });

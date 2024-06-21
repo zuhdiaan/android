@@ -94,9 +94,9 @@ export default function Menu({ navigation, route }) {
       })
       .then(data => {
         console.log('Fetched data:', data);
-        menuItems.length = 0; // Clear the array
-        menuItems.push(...data); // Populate the array with the fetched data
-        setFilteredItems([...data]); // Update filteredItems with the new data
+        menuItems.length = 0;
+        menuItems.push(...data);
+        setFilteredItems([...data]);
         setItemCounts(data.reduce((acc, item) => {
           acc[item.id] = 0;
           return acc;

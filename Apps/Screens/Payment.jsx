@@ -23,17 +23,14 @@ export default function Payment({ navigation, route }) {
 
   const placeOrder = async () => {
     try {
-      // Check if the user's balance is sufficient
       if (balance < totalPrice) {
         Alert.alert('Error', 'Insufficient balance');
         return;
       }
   
-      // Generate the order ID with the format ORDATE-1, ORDATE-2, and so on
       const currentDate = moment().format('DDMMYY');
       const orderId = `OR${currentDate}`;
   
-      // Send the order details to your backend
       const orderedItems = menuItems
         .filter(item => itemCounts[item.id] > 0)
         .map(item => ({
@@ -49,7 +46,7 @@ export default function Payment({ navigation, route }) {
         orderDate: new Date().toISOString(),
         orderedItems,
         userId,
-        name // Include the user's name
+        name
       };
 
       console.log('Order Data:', orderData);
@@ -58,12 +55,9 @@ export default function Payment({ navigation, route }) {
 
       console.log('Order Response:', orderResponse.data);
 
-      // Handle the responses from your backend
       if (orderResponse.status === 200) {
-        // Deduct the total price from the user's balance
         const newBalance = balance - totalPrice;
 
-        // Update the user's balance in your backend
         const balanceResponse = await axios.post('http://10.0.2.2:3000/api/updateBalance', { userId, newBalance });
 
         console.log('Balance Response:', balanceResponse.data);
@@ -161,9 +155,6 @@ const styles = StyleSheet.create({
   },
   totalContainer: {
     position: 'absolute',
-    // alignContent: 'center',
-    // alignItems: 'center',
-    // justifyContent: 'center',
     alignSelf: 'center',
     marginTop: 610,
     borderRadius: 50,
